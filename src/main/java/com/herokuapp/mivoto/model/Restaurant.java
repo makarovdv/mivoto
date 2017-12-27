@@ -1,5 +1,9 @@
 package com.herokuapp.mivoto.model;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "restaurants")
 public class Restaurant extends AbstractNamedEntity {
 
     public Restaurant(){}
@@ -38,9 +42,9 @@ public class Restaurant extends AbstractNamedEntity {
     @Override
     public String toString() {
         return "Restaurant{" +
-                "address='" + address + '\'' +
+                "name='" + name + '\'' +
+                ", address='" + address + '\'' +
                 ", phone='" + phone + '\'' +
-                ", name='" + name + '\'' +
                 ", id=" + id +
                 '}';
     }
