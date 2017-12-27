@@ -8,6 +8,8 @@
     <artifactId>mivoto</artifactId>
     <version>1.0-SNAPSHOT</version>
     <properties>
+        <!--Spring-->
+        <spring.version>5.0.1.RELEASE</spring.version>
         <!-- Logging -->
         <logback.version>1.2.3</logback.version>
         <slf4j.version>1.7.25</slf4j.version>
@@ -16,6 +18,11 @@
     </properties>
 
     <dependencies>
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+        </dependency>
         <!-- Logging with SLF4J & LogBack -->
         <dependency>
             <groupId>org.slf4j</groupId>
