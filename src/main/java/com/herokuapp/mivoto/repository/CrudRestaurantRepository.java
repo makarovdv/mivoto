@@ -1,10 +1,12 @@
 package com.herokuapp.mivoto.repository;
 
 import com.herokuapp.mivoto.model.Restaurant;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.domain.*;
+import org.springframework.data.jpa.repository.*;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Repository
@@ -18,4 +20,12 @@ public interface CrudRestaurantRepository extends JpaRepository<Restaurant, Inte
     default List<Restaurant> getAll(){
         return findAll(sort);
     }
+
+    default Page<Restaurant> getPage(int page, LocalDate date){
+        return findAll(PageRequest.of(page - 1,10, sort), date);
+    }
+
+    @EntityGraph(attributePaths = {"dishes"}, type = EntityGraph.EntityGraphType.LOAD)
+    @Query("SELECT r FROM Restaurant r LEFT JOIN r.dishes d WHERE d.date = :date")
+    Page<Restaurant> findAll(Pageable pageable, @Param("date")LocalDate date);
 }

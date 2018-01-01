@@ -3,9 +3,11 @@ package com.herokuapp.mivoto.service;
 import com.herokuapp.mivoto.model.Restaurant;
 import com.herokuapp.mivoto.repository.CrudRestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -44,5 +46,10 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public List<Restaurant> getAll() {
         return repository.getAll();
+    }
+
+    @Override
+    public Page<Restaurant> getPageWithDishesByDate(int page, LocalDate date){
+        return repository.getPage(page, date);
     }
 }

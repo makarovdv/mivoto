@@ -4,10 +4,14 @@ import com.herokuapp.mivoto.model.Restaurant;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.time.LocalDate;
+import java.util.*;
 
 import static com.herokuapp.mivoto.RestaurantTestData.*;
 
@@ -21,30 +25,44 @@ public class RestaurantServiceTest {
     @Test
     public void get(){
         Restaurant restaurant = service.get(RESTAURANT1_ID);
-        assertMatch(restaurant, TERRA_MARE);
+        assertMatchIgnoreDishes(restaurant, TERRA_MARE);
     }
 
     @Test
     public void getAll(){
-        assertMatch(service.getAll(), RESTAURANTS);
+        assertMatchIgnoreDishes(service.getAll(), RESTAURANTS);
     }
 
     @Test
     public void update(){
         service.update(UPDATED_TERRA_MARE);
-        assertMatch(service.getAll(), SICILIANA, SALOTTO, UPDATED_TERRA_MARE);
+        assertMatchIgnoreDishes(service.getPageWithDishesByDate(2, LocalDate.of(2017,12,30)), POROSELLO, SALOTTO, UPDATED_TERRA_MARE);
     }
 
     @Test
     public void create(){
-        Restaurant newRestaurant = new Restaurant(null, "Zeughauskeller", "Bahnhofstrasse 28a, Zurich 8001, Switzerland", "+41442201515");
+        Restaurant newRestaurant = new Restaurant(null, "Via Romano", "Lavochkina St., 34, Moscow 125581, Russia", "+74955453480");
         Restaurant created = service.create(newRestaurant);
-        assertMatch(service.getAll(), SICILIANA, SALOTTO, TERRA_MARE, created);
+        List<Restaurant> restaurantsWithCreated = new ArrayList<>(Arrays.asList(RESTAURANTS));
+        restaurantsWithCreated.add(created);
+        assertMatchIgnoreDishes(service.getAll(), restaurantsWithCreated);
     }
 
     @Test
     public void delete(){
-        service.delete(RESTAURANT1_ID);
-        assertMatch(service.getAll(), SICILIANA, SALOTTO);
+        service.delete(RESTAURANT1_ID + 1); //delete SALOTTO
+        assertMatchIgnoreDishes(service.getAll(), RESTAURANTS_WITHOUT_SALOTTO);
+    }
+
+    @Test
+    public void get1stPageWithDishes(){
+        Page<Restaurant> rs = service.getPageWithDishesByDate(1, LocalDate.of(2017,12,30));
+        assertMatch(rs, PAGE1_RESTAURANTS);
+    }
+
+    @Test
+    public void get2ndPageWithDishes(){
+        Page<Restaurant> rs = service.getPageWithDishesByDate(2, LocalDate.of(2017,12,30));
+        assertMatch(rs, PAGE2_RESTAURANTS);
     }
 }
