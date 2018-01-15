@@ -3,6 +3,8 @@ package com.herokuapp.mivoto.service;
 import com.herokuapp.mivoto.model.Restaurant;
 import com.herokuapp.mivoto.repository.CrudRestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,12 +22,14 @@ public class RestaurantServiceImpl implements RestaurantService {
         this.repository = repository;
     }
 
+    @CacheEvict(value = "restaurants", allEntries = true)
     @Transactional
     @Override
     public Restaurant create(Restaurant restaurant) {
         return repository.save(restaurant);
     }
 
+    @CacheEvict(value = "restaurants", allEntries = true)
     @Transactional
     @Override
     public void delete(int id) {
@@ -37,6 +41,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         return repository.getById(id);
     }
 
+    @CacheEvict(value = "restaurants", allEntries = true)
     @Transactional
     @Override
     public void update(Restaurant restaurant) {
@@ -48,6 +53,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         return repository.getAll();
     }
 
+    @Cacheable("restaurants")
     @Override
     public Page<Restaurant> getPageWithMenuByDate(int page, LocalDate date){
         return repository.getPage(page, date);

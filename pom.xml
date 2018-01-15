@@ -19,6 +19,8 @@
         <!-- Logging -->
         <logback.version>1.2.3</logback.version>
         <slf4j.version>1.7.25</slf4j.version>
+        <!--Cache-->
+        <ehcache.version>3.4.0</ehcache.version>
         <!--Test-->
         <junit.version>4.12</junit.version>
         <assertj-core.version>3.8.0</assertj-core.version>
@@ -95,6 +97,18 @@
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
             <scope>runtime</scope>
+        </dependency>
+        <!--Cache-->
+        <dependency>
+            <groupId>javax.cache</groupId>
+            <artifactId>cache-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <scope>runtime</scope>
+            <version>${ehcache.version}</version>
         </dependency>
         <!--Test-->
         <dependency>
