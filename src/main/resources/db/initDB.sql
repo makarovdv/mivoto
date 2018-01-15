@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS user_roles;
 DROP TABLE IF EXISTS dishes;
 DROP TABLE IF EXISTS menu;
 DROP TABLE IF EXISTS restaurants;
@@ -14,6 +15,14 @@ CREATE TABLE users
   password          VARCHAR(255)               NOT NULL
 );
 CREATE UNIQUE INDEX users_unique_email_idx ON USERS (email);
+
+CREATE TABLE user_roles
+(
+  user_id           INTEGER NOT NULL,
+  role              VARCHAR(255),
+  CONSTRAINT user_roles_idx UNIQUE (user_id, role),
+  FOREIGN KEY (user_id) REFERENCES USERS (id) ON DELETE CASCADE
+);
 
 CREATE TABLE restaurants
 (
