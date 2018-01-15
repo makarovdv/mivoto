@@ -12,12 +12,12 @@
         <heap unit="entries">5000</heap>
     </cache-template>
 
-    <cache-template name="singleNonExpiryCache">
+    <cache-template name="nonExpiryCache">
         <expiry>
             <none/>
         </expiry>
-        <heap>1</heap>
+        <heap>30</heap>
     </cache-template>
 
-    <cache alias="restaurants" uses-template="singleNonExpiryCache"/>
+    <cache alias="restaurants" uses-template="nonExpiryCache"/>
 </config>

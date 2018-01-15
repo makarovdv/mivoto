@@ -4,12 +4,10 @@ import com.herokuapp.mivoto.model.Restaurant;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@Repository
 public interface CrudRestaurantRepository extends JpaRepository<Restaurant, Integer>{
     Sort sort = new Sort(Sort.Direction.ASC, "name", "address", "phone");
 
