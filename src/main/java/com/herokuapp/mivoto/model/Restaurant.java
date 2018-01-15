@@ -9,7 +9,7 @@ import java.util.Set;
 public class Restaurant extends AbstractNamedEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "restaurant")
-    private Set<Dish> dishes;
+    private Set<Menu> menu;
 
     public Restaurant(){}
 
@@ -18,26 +18,30 @@ public class Restaurant extends AbstractNamedEntity {
         this.phone = phone;
     }
 
+    public Restaurant(Integer id){
+        super(id);
+    }
+
     public Restaurant(Integer id, String name, String address, String phone) {
         this(id, name, address, phone, Collections.emptySet());
     }
-    public Restaurant(Integer id, String name, String address, String phone, Set<Dish> dishes) {
+    public Restaurant(Integer id, String name, String address, String phone, Set<Menu> menu) {
         super(id, name);
         this.address = address;
         this.phone = phone;
-        this.dishes = dishes;
+        this.menu = menu;
     }
 
     private String address;
 
     private String phone;
 
-    public Set<Dish> getDishes() {
-        return dishes;
+    public Set<Menu> getMenu() {
+        return menu;
     }
 
-    public void setDishes(Set<Dish> dishes) {
-        this.dishes = dishes;
+    public void setMenu(Set<Menu> menu) {
+        this.menu = menu;
     }
 
     public String getAddress() {
@@ -63,6 +67,7 @@ public class Restaurant extends AbstractNamedEntity {
                 ", address='" + address + '\'' +
                 ", phone='" + phone + '\'' +
                 ", id=" + id +
+                ", menu=" + (menu == null ? "null" : menu) +
                 '}';
     }
 }

@@ -49,7 +49,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Page<Restaurant> getPageWithDishesByDate(int page, LocalDate date){
+    public Page<Restaurant> getPageWithMenuByDate(int page, LocalDate date){
         return repository.getPage(page, date);
     }
 }

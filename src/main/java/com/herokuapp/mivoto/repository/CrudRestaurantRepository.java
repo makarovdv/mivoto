@@ -25,7 +25,7 @@ public interface CrudRestaurantRepository extends JpaRepository<Restaurant, Inte
         return findAll(PageRequest.of(page - 1,10, sort), date);
     }
 
-    @EntityGraph(attributePaths = {"dishes"}, type = EntityGraph.EntityGraphType.LOAD)
-    @Query("SELECT r FROM Restaurant r LEFT JOIN r.dishes d WHERE d.date = :date")
+    @EntityGraph(attributePaths = {"menu"}, type = EntityGraph.EntityGraphType.LOAD)
+    @Query("SELECT r FROM Restaurant r LEFT JOIN r.menu m WHERE m.date = :date")
     Page<Restaurant> findAll(Pageable pageable, @Param("date")LocalDate date);
 }

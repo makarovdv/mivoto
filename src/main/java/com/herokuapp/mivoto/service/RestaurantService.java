@@ -18,5 +18,5 @@ public interface RestaurantService {
 
     List<Restaurant> getAll();
 
-    Page<Restaurant> getPageWithDishesByDate(int page, LocalDate date);
+    Page<Restaurant> getPageWithMenuByDate(int page, LocalDate date);
 }

@@ -1,36 +1,24 @@
 package com.herokuapp.mivoto.model;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
-@Entity
-@Table(name = "dishes")
-public class Dish extends AbstractNamedEntity{
+@Embeddable
+public class Dish implements Serializable{
     private BigDecimal price;
 
-    private LocalDate date;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurant_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @NotNull
-    private Restaurant restaurant;
+    private String description;
 
     public Dish() {}
 
     public Dish(Dish dish) {
-        this(dish.getId(), dish.getName(), dish.getPrice(), dish.getDate());
+        this(dish.getDescription(), dish.getPrice());
     }
 
-    public Dish(Integer id, String name, BigDecimal price, LocalDate date) {
-        super(id, name);
+    public Dish(String description, BigDecimal price) {
+        this.description = description;
         this.price = price;
-        this.date = date;
     }
 
     public BigDecimal getPrice() {
@@ -41,28 +29,31 @@ public class Dish extends AbstractNamedEntity{
         this.price = price;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public String getDescription(){
+        return description;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
-
-    public Restaurant getRestaurant() {
-        return restaurant;
-    }
-
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
+    public void setDescription(String description){
+        this.description = description;
     }
 
     @Override
     public String toString() {
         return "Dish{" +
-                "name='" + name + '\'' +
-                ", price=" + price +
-                ", id=" + id +
+                "price=" + price +
+                ", description='" + description + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Dish that = (Dish) o;
+        return getDescription().equals(((Dish) o).getDescription());
+    }
+    @Override
+    public int hashCode() {
+        return getDescription().hashCode();
     }
 }
