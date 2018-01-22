@@ -6,8 +6,10 @@
 
     <groupId>com.herokuapp.mivoto</groupId>
     <artifactId>mivoto</artifactId>
+    <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
     <properties>
+        <tomcat.version>8.5.24</tomcat.version>
         <!--Spring-->
         <spring.version>5.0.1.RELEASE</spring.version>
         <spring-data-jpa.version>2.0.2.RELEASE</spring-data-jpa.version>
@@ -27,6 +29,8 @@
     </properties>
 
     <build>
+        <finalName>mivoto</finalName>
+        <defaultGoal>package</defaultGoal>
         <plugins>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -109,6 +113,22 @@
             <artifactId>ehcache</artifactId>
             <scope>runtime</scope>
             <version>${ehcache.version}</version>
+        </dependency>
+        <!--Web-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-servlet-api</artifactId>
+            <version>${tomcat.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
         </dependency>
         <!--Test-->
         <dependency>
