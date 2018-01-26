@@ -1,68 +1,61 @@
 package com.herokuapp.mivoto.service;
 
 import com.herokuapp.mivoto.model.Restaurant;
+import com.herokuapp.mivoto.to.RestaurantTo;
+import com.herokuapp.mivoto.to.RestaurantWithMenuTo;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
 import java.time.LocalDate;
-import java.util.*;
 
 import static com.herokuapp.mivoto.RestaurantTestData.*;
+import static com.herokuapp.mivoto.utils.RestaurantsUtil.fromTo;
 
-@ContextConfiguration({"classpath:spring/spring-app.xml", "classpath:spring/spring-db.xml"})
-@RunWith(SpringJUnit4ClassRunner.class)
-@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-public class RestaurantServiceTest {
+public class RestaurantServiceTest extends AbstractServiceTest{
     @Autowired
     private RestaurantService service;
 
     @Test
     public void get(){
-        Restaurant restaurant = service.get(RESTAURANT1_ID);
-        assertMatchIgnoreDishes(restaurant, TERRA_MARE);
+        RestaurantTo restaurant = service.get(RESTAURANT1_ID);
+        assertMatch(restaurant, TERRA_MARE);
     }
 
     @Test
-    public void getAll(){
-        assertMatchIgnoreDishes(service.getAll(), RESTAURANTS);
+    public void get1stPage(){
+        Page<RestaurantTo> rs = service.getPage(1);
+        assertMatch(rs, RESTAURANTS_PAGE1);
+    }
+
+    @Test
+    public void get2ndPage(){
+        Page<RestaurantTo> rs = service.getPage(2);
+        assertMatch(rs, RESTAURANTS_PAGE2);
     }
 
     @Test
     public void update(){
         service.update(UPDATED_TERRA_MARE);
-        assertMatchIgnoreDishes(service.getPageWithDishesByDate(2, LocalDate.of(2017,12,30)), POROSELLO, SALOTTO, UPDATED_TERRA_MARE);
+        assertMatch(service.getPage(2), POROSELLO, SALOTTO, UPDATED_TERRA_MARE);
     }
 
     @Test
     public void create(){
-        Restaurant newRestaurant = new Restaurant(null, "Via Romano", "Lavochkina St., 34, Moscow 125581, Russia", "+74955453480");
-        Restaurant created = service.create(newRestaurant);
-        List<Restaurant> restaurantsWithCreated = new ArrayList<>(Arrays.asList(RESTAURANTS));
-        restaurantsWithCreated.add(created);
-        assertMatchIgnoreDishes(service.getAll(), restaurantsWithCreated);
+        Restaurant newRestaurant = getCreated();
+        Restaurant created = fromTo(service.create(newRestaurant));
+        assertMatch(service.getPage(2), POROSELLO, SALOTTO, TERRA_MARE, created);
     }
 
     @Test
     public void delete(){
         service.delete(RESTAURANT1_ID + 1); //delete SALOTTO
-        assertMatchIgnoreDishes(service.getAll(), RESTAURANTS_WITHOUT_SALOTTO);
+        assertMatch(service.getPage(2), POROSELLO, TERRA_MARE);
     }
 
     @Test
-    public void get1stPageWithDishes(){
-        Page<Restaurant> rs = service.getPageWithDishesByDate(1, LocalDate.of(2017,12,30));
-        assertMatch(rs, PAGE1_RESTAURANTS);
-    }
-
-    @Test
-    public void get2ndPageWithDishes(){
-        Page<Restaurant> rs = service.getPageWithDishesByDate(2, LocalDate.of(2017,12,30));
-        assertMatch(rs, PAGE2_RESTAURANTS);
+    public void get2ndPageWithMenu(){
+        Page<RestaurantWithMenuTo> rs = service.getPageWithMenu(2, LocalDate.of(2017, 12, 30));
+        System.out.println(rs.toString());
+        assertMatchWithMenu(rs, RESTAURANTS_WITH_MENU_PAGE2);
     }
 }
