@@ -12,12 +12,21 @@
         <heap unit="entries">5000</heap>
     </cache-template>
 
-    <cache-template name="nonExpiryCache">
+    <cache-template name="nonExpiryRestaurantsCache">
         <expiry>
             <none/>
         </expiry>
         <heap>30</heap>
     </cache-template>
 
-    <cache alias="restaurants" uses-template="nonExpiryCache"/>
+    <cache-template name="expiryRestaurantsWithMenuCache">
+        <expiry>
+            <ttl unit="days">1</ttl>
+        </expiry>
+        <heap>30</heap>
+    </cache-template>
+
+    <cache alias="restaurants" uses-template="nonExpiryRestaurantsCache"/>
+
+    <cache alias="restaurants_with_menu" uses-template="expiryRestaurantsWithMenuCache"/>
 </config>

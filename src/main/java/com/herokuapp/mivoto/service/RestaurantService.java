@@ -1,22 +1,27 @@
 package com.herokuapp.mivoto.service;
 
 import com.herokuapp.mivoto.model.Restaurant;
-import org.springframework.data.domain.Page;
+import com.herokuapp.mivoto.to.RestaurantTo;
+import com.herokuapp.mivoto.to.RestaurantWithMenuTo;
 
+import org.springframework.data.domain.Page;
 import java.time.LocalDate;
-import java.util.List;
 
 public interface RestaurantService {
 
-    Restaurant create(Restaurant restaurant);
+    RestaurantTo create(Restaurant restaurant);
 
     void update(Restaurant restaurant);
 
     void delete(int id);
 
-    Restaurant get(int id);
+    RestaurantTo get(int id);
 
-    List<Restaurant> getAll();
+    Page<RestaurantTo> getPage(int page);
 
-    Page<Restaurant> getPageWithMenuByDate(int page, LocalDate date);
+    // can return value with empty MenuTo
+    Page<RestaurantWithMenuTo> getPageWithMenu(int page, LocalDate date);
+
+    // returns value only with MenuTo
+    Page<RestaurantWithMenuTo> getPageOnlyWithMenu(int page, LocalDate date);
 }
