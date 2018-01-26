@@ -24,6 +24,10 @@ public class User extends AbstractNamedEntity {
     public User() {
     }
 
+    public User(Integer id){
+        super(id);
+    }
+
     public User(Integer id, String name, String email) {
         super(id, name);
         this.email = email;
