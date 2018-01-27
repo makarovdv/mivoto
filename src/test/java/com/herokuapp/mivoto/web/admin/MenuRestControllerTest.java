@@ -3,7 +3,6 @@ package com.herokuapp.mivoto.web.admin;
 import com.herokuapp.mivoto.TestUtil;
 import com.herokuapp.mivoto.service.MenuService;
 import com.herokuapp.mivoto.to.MenuTo;
-import com.herokuapp.mivoto.web.AbstractControllerTest;
 import com.herokuapp.mivoto.web.json.JsonUtil;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +18,8 @@ import static com.herokuapp.mivoto.DishTestData.THE_PORKIE;
 import static com.herokuapp.mivoto.MenuTestData.*;
 import static com.herokuapp.mivoto.MenuTestData.assertMatch;
 import static com.herokuapp.mivoto.TestUtil.contentJson;
+import static com.herokuapp.mivoto.TestUtil.userHttpBasic;
+import static com.herokuapp.mivoto.UserTestData.ADMIN;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -26,15 +27,21 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class MenuRestControllerTest extends AbstractControllerTest {
+public class MenuRestControllerTest extends AbstractAdminRestControllerTest {
     private static final String REST_URL = MenuRestController.REST_URL + '/';
 
     @Autowired
     MenuService menuService;
 
+    @Override
+    protected String getRestUrl() {
+        return REST_URL;
+    }
+
     @Test
     public void testGet() throws Exception {
-        mockMvc.perform(get(REST_URL + MENU1_ID))
+        mockMvc.perform(get(REST_URL + MENU1_ID)
+                .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -48,6 +55,7 @@ public class MenuRestControllerTest extends AbstractControllerTest {
         updated.setDishes(new HashSet<>(Arrays.asList(THE_PORKIE, CANNELLONI)));
         mockMvc.perform(put(REST_URL + MENU1_ID)
                 .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
                 .content(JsonUtil.writeValue(updated)))
                 .andExpect(status().isOk());
 
@@ -60,6 +68,7 @@ public class MenuRestControllerTest extends AbstractControllerTest {
         MenuTo created = getCreated();
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
                 .content(JsonUtil.writeValue(created)));
 
         MenuTo returned = TestUtil.readFromJson(action, MenuTo.class);
