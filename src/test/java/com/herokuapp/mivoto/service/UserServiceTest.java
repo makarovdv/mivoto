@@ -10,7 +10,6 @@ import java.util.List;
 import static com.herokuapp.mivoto.UserTestData.*;
 import static com.herokuapp.mivoto.UserTestData.assertMatch;
 
-
 public  class UserServiceTest extends AbstractServiceTest {
 
     @Autowired
@@ -18,10 +17,10 @@ public  class UserServiceTest extends AbstractServiceTest {
 
     @Test
     public void create() {
-        User newUser = new User(null, "New", "new@gmail.com", "newPass", Collections.singleton(Role.USER));
+        User newUser = new User(null, "new", "new@gmail.com", "newPass", Collections.singleton(Role.ROLE_USER));
         User created = service.create(newUser);
         newUser.setId(created.getId());
-        assertMatch(service.getAll(), USER, newUser, ADMIN);
+        assertMatch(service.getAll(), ADMIN, newUser, USER);
     }
 
     @Test
@@ -38,7 +37,7 @@ public  class UserServiceTest extends AbstractServiceTest {
 
     @Test
     public void getByEmail() {
-        User user = service.getByEmail("petrov@gmail.com");
+        User user = service.getByEmail("admin@gmail.com");
         assertMatch(user, ADMIN);
     }
 
@@ -46,7 +45,7 @@ public  class UserServiceTest extends AbstractServiceTest {
     public void update() {
         User updated = new User(USER);
         updated.setName("UpdatedName");
-        updated.setRoles(Collections.singletonList(Role.ADMIN));
+        updated.setRoles(Collections.singletonList(Role.ROLE_ADMIN));
         service.update(updated);
         assertMatch(service.get(USER_ID), updated);
     }
@@ -54,6 +53,6 @@ public  class UserServiceTest extends AbstractServiceTest {
     @Test
     public void getAll() throws Exception {
         List<User> all = service.getAll();
-        assertMatch(all, USER, ADMIN);
+        assertMatch(all, ADMIN, USER);
     }
 }

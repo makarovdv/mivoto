@@ -5,12 +5,12 @@ DELETE FROM users;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
 INSERT INTO users (name, email, password) VALUES
-  ('Ivanov', 'ivanov@yandex.ru', 'password'),
-  ('Petrov', 'petrov@gmail.com', 'password');
+  ('user', 'user@yandex.ru', 'pass'),
+  ('admin', 'admin@gmail.com', 'password');
 
 INSERT INTO user_roles (role, user_id) VALUES
-  ('USER', 100000),
-  ('ADMIN', 100001);
+  ('ROLE_USER', 100000),
+  ('ROLE_ADMIN', 100001);
 
 INSERT INTO restaurants (name, address, phone) VALUES
   ('TerraMare', 'Tsvetnoi Blvd., 20/1', '+74956081519'),
