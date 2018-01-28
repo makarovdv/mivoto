@@ -1,8 +1,7 @@
 package com.herokuapp.mivoto;
 
-import com.herokuapp.mivoto.model.Dish;
 import com.herokuapp.mivoto.model.Restaurant;
-import com.herokuapp.mivoto.to.MenuTo;
+import com.herokuapp.mivoto.to.PageTo;
 import com.herokuapp.mivoto.to.RestaurantTo;
 import com.herokuapp.mivoto.to.RestaurantWithMenuTo;
 
@@ -34,7 +33,6 @@ public class RestaurantTestData {
     public static final Restaurant UPDATED_TERRA_MARE = new Restaurant(RESTAURANT1_ID,"updated", "Tsvetnoi Blvd., 20/1","+74956081519");
 
     public static final Restaurant[] RESTAURANTS = new Restaurant[]{BOSCO_BAR, BOSCO_CAFE, COFFEE_ROOM, DOLKABAR, DONNA_MARGATITA, FORTE_BELLO, SICILIANA, OSTERIA_ALBOROBELLO, OSTERIA_MARIO, PASTA_AND_BASTA, POROSELLO, SALOTTO, TERRA_MARE};
-    public static final Restaurant[] RESTAURANTS_WITHOUT_SALOTTO = new Restaurant[]{BOSCO_BAR, BOSCO_CAFE, COFFEE_ROOM, DOLKABAR, DONNA_MARGATITA, FORTE_BELLO, SICILIANA, OSTERIA_ALBOROBELLO, OSTERIA_MARIO, PASTA_AND_BASTA, POROSELLO, TERRA_MARE};
     public static final Restaurant[] RESTAURANTS_PAGE1 = new Restaurant[]{BOSCO_BAR, BOSCO_CAFE, COFFEE_ROOM, DOLKABAR, DONNA_MARGATITA, FORTE_BELLO, SICILIANA, OSTERIA_ALBOROBELLO, OSTERIA_MARIO, PASTA_AND_BASTA};
     public static final Restaurant[] RESTAURANTS_PAGE2 = new Restaurant[]{POROSELLO, SALOTTO, TERRA_MARE};
     public static final RestaurantWithMenuTo[] RESTAURANTS_WITH_MENU_PAGE2 = new RestaurantWithMenuTo[]{
@@ -42,6 +40,7 @@ public class RestaurantTestData {
             new RestaurantWithMenuTo(asTo(SALOTTO), MENU2),
             new RestaurantWithMenuTo(asTo(TERRA_MARE), MENU1)
     };
+    public static final PageTo<RestaurantWithMenuTo> RESTAURANTS_WITH_MENU_PAGE2TO = new PageTo<>(Arrays.asList(RESTAURANTS_WITH_MENU_PAGE2),2, 10, 2);
 
     private static Comparator<RestaurantWithMenuTo> RESTAURANT_WITH_MENU_COMPARATOR = (r1, r2) -> {
         int id = Integer.compare(r1.getId(), r2.getId());
