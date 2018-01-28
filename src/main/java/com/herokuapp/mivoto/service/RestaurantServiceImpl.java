@@ -68,7 +68,10 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public PageTo<RestaurantWithMenuTo> getPageWithMenu(int page, LocalDate date){
         PageTo<RestaurantTo> restaurants = getPage(page);
-        List<Integer> id = restaurants.stream().map(r -> r.getId()).collect(toList());
+        List<Integer> id = restaurants
+                .getContent()
+                .stream()
+                .map(r -> r.getId()).collect(toList());
         List<Menu> menu = menuRepository.getByRestaurantId(id, date);
         return asToWithMenu(restaurants, menu);
     }

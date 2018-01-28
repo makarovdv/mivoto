@@ -1,12 +1,8 @@
 package com.herokuapp.mivoto.to;
 
-import java.util.Iterator;
 import java.util.List;
-import java.util.Spliterator;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 
-public class PageTo<T extends BaseTo> implements Iterable<T> {
+public class PageTo<T extends BaseTo> {
     private List<T> content;
 
     private int page, pageSize, totalPages;
@@ -33,25 +29,6 @@ public class PageTo<T extends BaseTo> implements Iterable<T> {
 
     public int getTotalPages() {
         return totalPages;
-    }
-
-    public Stream<T> stream(){
-        return content.stream();
-    }
-
-    @Override
-    public void forEach(Consumer<? super T> consumer) {
-        content.forEach(consumer);
-    }
-
-    @Override
-    public Spliterator<T> spliterator() {
-        return content.spliterator();
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        return content.iterator();
     }
 
     @Override

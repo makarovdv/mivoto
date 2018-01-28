@@ -26,7 +26,8 @@ public class RestaurantsUtil {
 
     public static PageTo<RestaurantTo> asTo(Page<Restaurant> restaurants) {
         List<RestaurantTo> content =  restaurants.stream()
-                .map(r -> asTo(r)).collect(Collectors.toList());
+                .map(RestaurantsUtil::asTo)
+                .collect(Collectors.toList());
         Pageable p = restaurants.getPageable();
         return new PageTo<>(content, p.getPageNumber(), p.getPageSize(), restaurants.getTotalPages());
     }
@@ -44,16 +45,14 @@ public class RestaurantsUtil {
                 .map(m -> asToWithMenu(m.getRestaurant(), m))
                 .collect(toList());
         Pageable p = menu.getPageable();
-        return new PageTo(content, p.getPageNumber(), p.getPageSize(), menu.getTotalPages());
+        return new PageTo<>(content, p.getPageNumber(), p.getPageSize(), menu.getTotalPages());
     }
 
     public static PageTo<RestaurantWithMenuTo> asToWithMenu(PageTo<RestaurantTo> restaurants, List<Menu> menu) {
-        List<Integer> id = restaurants.stream()
-                .map(r -> r.getId())
-                .collect(toList());
         Map<Integer, MenuTo> menuMap = menu.stream()
                 .collect(Collectors.toMap(m -> m.getRestaurant().getId(), MenuUtil::asTo));
-        List<RestaurantWithMenuTo> content = restaurants.stream()
+        List<RestaurantWithMenuTo> content = restaurants.getContent()
+                .stream()
                 .map(r -> asToWithMenu(r, menuMap.get(r.getId())))
                 .collect(toList());
         return new PageTo<>(content, restaurants.getPage(), restaurants.getPageSize(), restaurants.getTotalPages());
