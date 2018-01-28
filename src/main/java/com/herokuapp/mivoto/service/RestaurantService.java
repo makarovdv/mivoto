@@ -1,10 +1,10 @@
 package com.herokuapp.mivoto.service;
 
 import com.herokuapp.mivoto.model.Restaurant;
+import com.herokuapp.mivoto.to.PageTo;
 import com.herokuapp.mivoto.to.RestaurantTo;
 import com.herokuapp.mivoto.to.RestaurantWithMenuTo;
 
-import org.springframework.data.domain.Page;
 import java.time.LocalDate;
 
 public interface RestaurantService {
@@ -17,11 +17,11 @@ public interface RestaurantService {
 
     RestaurantTo get(int id);
 
-    Page<RestaurantTo> getPage(int page);
+    PageTo<RestaurantTo> getPage(int page);
 
     // can return value with empty MenuTo
-    Page<RestaurantWithMenuTo> getPageWithMenu(int page, LocalDate date);
+    PageTo<RestaurantWithMenuTo> getPageWithMenu(int page, LocalDate date);
 
-    // returns value only with MenuTo
-    Page<RestaurantWithMenuTo> getPageOnlyWithMenu(int page, LocalDate date);
+    // returns value with no empty MenuTo
+    PageTo<RestaurantWithMenuTo> getPageOnlyWithMenu(int page, LocalDate date);
 }

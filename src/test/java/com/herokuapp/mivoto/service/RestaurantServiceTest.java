@@ -1,11 +1,11 @@
 package com.herokuapp.mivoto.service;
 
 import com.herokuapp.mivoto.model.Restaurant;
+import com.herokuapp.mivoto.to.PageTo;
 import com.herokuapp.mivoto.to.RestaurantTo;
 import com.herokuapp.mivoto.to.RestaurantWithMenuTo;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import java.time.LocalDate;
 
 import static com.herokuapp.mivoto.RestaurantTestData.*;
@@ -23,13 +23,13 @@ public class RestaurantServiceTest extends AbstractServiceTest{
 
     @Test
     public void get1stPage(){
-        Page<RestaurantTo> rs = service.getPage(1);
+        PageTo<RestaurantTo> rs = service.getPage(1);
         assertMatch(rs, RESTAURANTS_PAGE1);
     }
 
     @Test
     public void get2ndPage(){
-        Page<RestaurantTo> rs = service.getPage(2);
+        PageTo<RestaurantTo> rs = service.getPage(2);
         assertMatch(rs, RESTAURANTS_PAGE2);
     }
 
@@ -54,8 +54,7 @@ public class RestaurantServiceTest extends AbstractServiceTest{
 
     @Test
     public void get2ndPageWithMenu(){
-        Page<RestaurantWithMenuTo> rs = service.getPageWithMenu(2, LocalDate.of(2017, 12, 30));
-        System.out.println(rs.toString());
+        PageTo<RestaurantWithMenuTo> rs = service.getPageWithMenu(2, LocalDate.of(2017, 12, 30));
         assertMatchWithMenu(rs, RESTAURANTS_WITH_MENU_PAGE2);
     }
 }

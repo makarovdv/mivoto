@@ -4,13 +4,13 @@ import com.herokuapp.mivoto.model.Menu;
 import com.herokuapp.mivoto.model.Restaurant;
 import com.herokuapp.mivoto.repository.CrudMenuRepository;
 import com.herokuapp.mivoto.repository.RestaurantRepository;
+import com.herokuapp.mivoto.to.PageTo;
 import com.herokuapp.mivoto.to.RestaurantTo;
 import com.herokuapp.mivoto.to.RestaurantWithMenuTo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -61,20 +61,20 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     @Cacheable("restaurants")
-    public Page<RestaurantTo> getPage(int page) {
+    public PageTo<RestaurantTo> getPage(int page) {
         return asTo(restaurantRepository.getPage(page));
     }
 
     @Override
-    public Page<RestaurantWithMenuTo> getPageWithMenu(int page, LocalDate date){
-        Page<RestaurantTo> restaurants = getPage(page);
+    public PageTo<RestaurantWithMenuTo> getPageWithMenu(int page, LocalDate date){
+        PageTo<RestaurantTo> restaurants = getPage(page);
         List<Integer> id = restaurants.stream().map(r -> r.getId()).collect(toList());
         List<Menu> menu = menuRepository.getByRestaurantId(id, date);
         return asToWithMenu(restaurants, menu);
     }
 
     @Cacheable("restaurants_with_menu")
-    public Page<RestaurantWithMenuTo> getPageOnlyWithMenu(int page, LocalDate date){
+    public PageTo<RestaurantWithMenuTo> getPageOnlyWithMenu(int page, LocalDate date){
         return asToWithMenu(menuRepository.getPage(page, date));
     }
 }

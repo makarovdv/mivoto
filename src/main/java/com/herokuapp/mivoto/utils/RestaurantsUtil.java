@@ -2,11 +2,9 @@ package com.herokuapp.mivoto.utils;
 
 import com.herokuapp.mivoto.model.Menu;
 import com.herokuapp.mivoto.model.Restaurant;
-import com.herokuapp.mivoto.to.MenuTo;
-import com.herokuapp.mivoto.to.RestaurantTo;
-import com.herokuapp.mivoto.to.RestaurantWithMenuTo;
+import com.herokuapp.mivoto.to.*;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
@@ -26,9 +24,11 @@ public class RestaurantsUtil {
         return new RestaurantTo(restaurant.getId(), restaurant.getName(), restaurant.getAddress(), restaurant.getPhone());
     }
 
-    public static Page<RestaurantTo> asTo(Page<Restaurant> restaurants) {
-        List<RestaurantTo> content =  restaurants.stream().map(r -> asTo(r)).collect(Collectors.toList());
-        return new PageImpl<>(content, restaurants.getPageable(), restaurants.getTotalPages());
+    public static PageTo<RestaurantTo> asTo(Page<Restaurant> restaurants) {
+        List<RestaurantTo> content =  restaurants.stream()
+                .map(r -> asTo(r)).collect(Collectors.toList());
+        Pageable p = restaurants.getPageable();
+        return new PageTo<>(content, p.getPageNumber(), p.getPageSize(), restaurants.getTotalPages());
     }
 
     public static RestaurantWithMenuTo asToWithMenu(RestaurantTo restaurant, MenuTo menu) {
@@ -39,24 +39,23 @@ public class RestaurantsUtil {
         return new RestaurantWithMenuTo(asTo(restaurant), MenuUtil.asTo(menu));
     }
 
-    public static Page<RestaurantWithMenuTo> asToWithMenu(Page<Menu> menu) {
+    public static PageTo<RestaurantWithMenuTo> asToWithMenu(Page<Menu> menu) {
         List<RestaurantWithMenuTo> content = menu.stream()
                 .map(m -> asToWithMenu(m.getRestaurant(), m))
                 .collect(toList());
-        return new PageImpl<>(content, menu.getPageable(), menu.getTotalPages());
+        Pageable p = menu.getPageable();
+        return new PageTo(content, p.getPageNumber(), p.getPageSize(), menu.getTotalPages());
     }
 
-    public static Page<RestaurantWithMenuTo> asToWithMenu(Page<RestaurantTo> restaurants, List<Menu> menu) {
+    public static PageTo<RestaurantWithMenuTo> asToWithMenu(PageTo<RestaurantTo> restaurants, List<Menu> menu) {
         List<Integer> id = restaurants.stream()
                 .map(r -> r.getId())
                 .collect(toList());
         Map<Integer, MenuTo> menuMap = menu.stream()
-                .collect(
-                        Collectors.toMap(m -> m.getRestaurant().getId(), MenuUtil::asTo)
-                );
+                .collect(Collectors.toMap(m -> m.getRestaurant().getId(), MenuUtil::asTo));
         List<RestaurantWithMenuTo> content = restaurants.stream()
                 .map(r -> asToWithMenu(r, menuMap.get(r.getId())))
                 .collect(toList());
-        return new PageImpl<>(content, restaurants.getPageable(), restaurants.getTotalPages());
+        return new PageTo<>(content, restaurants.getPage(), restaurants.getPageSize(), restaurants.getTotalPages());
     }
 }
