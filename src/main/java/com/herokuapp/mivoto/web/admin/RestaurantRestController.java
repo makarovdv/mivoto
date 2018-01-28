@@ -2,15 +2,19 @@ package com.herokuapp.mivoto.web.admin;
 
 import com.herokuapp.mivoto.model.Restaurant;
 import com.herokuapp.mivoto.service.RestaurantService;
+import com.herokuapp.mivoto.to.PageTo;
 import com.herokuapp.mivoto.to.RestaurantTo;
 
+import com.herokuapp.mivoto.to.RestaurantWithMenuTo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.LocalDate;
 
 import static com.herokuapp.mivoto.utils.ValidationUtil.assureIdConsistent;
 import static com.herokuapp.mivoto.utils.ValidationUtil.checkNew;
@@ -41,8 +45,15 @@ public class RestaurantRestController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public void delete(@PathVariable("id") int id) {
         restaurantService.delete(id);
+    }
+
+
+    @GetMapping(value = "/menu/by", produces = MediaType.APPLICATION_JSON_VALUE)
+    public PageTo<RestaurantWithMenuTo> getRestaurantPageWithMenu(@RequestParam("page") int page, @RequestParam("date") LocalDate date) {
+        return restaurantService.getPageWithMenu(page, date);
     }
 }

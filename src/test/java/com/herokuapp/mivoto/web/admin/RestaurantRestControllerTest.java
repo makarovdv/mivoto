@@ -60,10 +60,9 @@ public class RestaurantRestControllerTest extends AbstractAdminRestControllerTes
 
     @Test
     public void testDelete() throws Exception {
-        System.out.println("delete" + REST_URL + RESTAURANT1_ID);
         mockMvc.perform(delete(REST_URL + RESTAURANT1_ID)
                 .with(userHttpBasic(ADMIN)))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
         assertMatch(restaurantService.getPage(2), POROSELLO, SALOTTO);
     }
 }

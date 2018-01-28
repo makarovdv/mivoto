@@ -4,6 +4,7 @@ import com.herokuapp.mivoto.service.MenuService;
 import com.herokuapp.mivoto.to.MenuTo;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,6 @@ public class MenuRestController {
 
     @Autowired
     private MenuService menuService;
-
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public MenuTo get(@PathVariable("id") int id) {
@@ -53,6 +53,7 @@ public class MenuRestController {
         menuService.update(menu);
     }
 
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public void delete(@PathVariable("id") int id) {
         menuService.delete(id);
