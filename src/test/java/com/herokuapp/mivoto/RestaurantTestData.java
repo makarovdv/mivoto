@@ -35,12 +35,13 @@ public class RestaurantTestData {
     public static final Restaurant[] RESTAURANTS = new Restaurant[]{BOSCO_BAR, BOSCO_CAFE, COFFEE_ROOM, DOLKABAR, DONNA_MARGATITA, FORTE_BELLO, SICILIANA, OSTERIA_ALBOROBELLO, OSTERIA_MARIO, PASTA_AND_BASTA, POROSELLO, SALOTTO, TERRA_MARE};
     public static final Restaurant[] RESTAURANTS_PAGE1 = new Restaurant[]{BOSCO_BAR, BOSCO_CAFE, COFFEE_ROOM, DOLKABAR, DONNA_MARGATITA, FORTE_BELLO, SICILIANA, OSTERIA_ALBOROBELLO, OSTERIA_MARIO, PASTA_AND_BASTA};
     public static final Restaurant[] RESTAURANTS_PAGE2 = new Restaurant[]{POROSELLO, SALOTTO, TERRA_MARE};
+    public static final PageTo<RestaurantTo> RESTAURANTS_PAGE2_TO = new PageTo<>(Arrays.asList(asTo(POROSELLO), asTo(SALOTTO), asTo(TERRA_MARE)), 1, 10, 2);
     public static final RestaurantWithMenuTo[] RESTAURANTS_WITH_MENU_PAGE2 = new RestaurantWithMenuTo[]{
             new RestaurantWithMenuTo(asTo(POROSELLO), MENU7),
             new RestaurantWithMenuTo(asTo(SALOTTO), MENU2),
             new RestaurantWithMenuTo(asTo(TERRA_MARE), MENU1)
     };
-    public static final PageTo<RestaurantWithMenuTo> RESTAURANTS_WITH_MENU_PAGE2TO = new PageTo<>(Arrays.asList(RESTAURANTS_WITH_MENU_PAGE2),2, 10, 2);
+    public static final PageTo<RestaurantWithMenuTo> RESTAURANTS_WITH_MENU_PAGE2TO = new PageTo<>(Arrays.asList(RESTAURANTS_WITH_MENU_PAGE2),1, 10, 2);
 
     private static Comparator<RestaurantWithMenuTo> RESTAURANT_WITH_MENU_COMPARATOR = (r1, r2) -> {
         int id = Integer.compare(r1.getId(), r2.getId());

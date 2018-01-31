@@ -43,6 +43,6 @@ public class RestaurantRepositoryImpl implements RestaurantRepository{
 
     @Override
     public Page<Restaurant> getPage(int page) {
-        return restaurantRepository.findAll(PageRequest.of(page - 1, PAGE_SIZE, SORT));
+        return restaurantRepository.findAll(PageRequest.of(page, PAGE_SIZE, SORT));
     }
 }

@@ -17,7 +17,7 @@ public interface CrudMenuRepository extends JpaRepository<Menu, Integer>{
     Menu getById(Integer id);
 
     default Page<Menu> getPage(int page, LocalDate date){
-        return findAll(PageRequest.of(page - 1,10), date);
+        return findAll(PageRequest.of(page,10), date);
     }
 
     @EntityGraph(attributePaths = {"restaurant"}, type = EntityGraph.EntityGraphType.LOAD)

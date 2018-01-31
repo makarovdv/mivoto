@@ -9,15 +9,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 abstract public class AbstractAdminRestControllerTest extends AbstractControllerTest {
-
-    abstract protected String getRestUrl();
-
-    @Test
-    public void testGetUnauth() throws Exception {
-        mockMvc.perform(get(getRestUrl()))
-                .andExpect(status().isUnauthorized());
-    }
-
     @Test
     public void testGetForbidden() throws Exception {
         mockMvc.perform(get(getRestUrl())

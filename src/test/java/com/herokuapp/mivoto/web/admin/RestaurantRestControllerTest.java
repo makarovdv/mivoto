@@ -66,16 +66,16 @@ public class RestaurantRestControllerTest extends AbstractAdminRestControllerTes
         mockMvc.perform(delete(REST_URL + RESTAURANT1_ID)
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isNoContent());
-        assertMatch(restaurantService.getPage(2).getContent(), POROSELLO, SALOTTO);
+        assertMatch(restaurantService.getPage(1).getContent(), POROSELLO, SALOTTO);
     }
 
     @Test
     public void testGetPageWithMenu() throws Exception {
-            ResultActions action = mockMvc.perform(get(REST_URL + "menu/by?page=2&date=2017-12-30")
+            ResultActions action = mockMvc.perform(get(REST_URL + "menu/by?page=1&date=2017-12-30")
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(contentJson(RESTAURANTS_WITH_MENU_PAGE2TO));
+                .andExpect(contentJson(RESTAURANTS_PAGE2_TO));
     }
 }

@@ -1,6 +1,7 @@
 package com.herokuapp.mivoto.web;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
@@ -16,6 +17,8 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import javax.annotation.PostConstruct;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -41,6 +44,14 @@ abstract public class AbstractControllerTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
+
+    abstract protected String getRestUrl();
+
+    @Test
+    public void testGetUnauth() throws Exception {
+        mockMvc.perform(get(getRestUrl()))
+                .andExpect(status().isUnauthorized());
+    }
 
     @PostConstruct
     private void postConstruct() {

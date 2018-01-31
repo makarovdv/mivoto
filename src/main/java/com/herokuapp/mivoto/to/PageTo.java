@@ -19,8 +19,7 @@ public class PageTo<T extends BaseTo> {
     }
 
     public int getPage() {
-        // pagination starts from 1
-        return page + 1;
+        return page;
     }
 
     public int getPageSize() {

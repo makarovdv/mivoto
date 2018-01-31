@@ -22,38 +22,38 @@ public class RestaurantServiceTest extends AbstractServiceTest{
     }
     @Test
     public void get1stPage(){
-        PageTo<RestaurantTo> rs = service.getPage(1);
+        PageTo<RestaurantTo> rs = service.getPage(0);
         assertMatch(rs.getContent(), RESTAURANTS_PAGE1);
     }
 
     @Test
     public void get2ndPage(){
-        PageTo<RestaurantTo> rs = service.getPage(2);
+        PageTo<RestaurantTo> rs = service.getPage(1);
         assertMatch(rs.getContent(), RESTAURANTS_PAGE2);
     }
 
     @Test
     public void update(){
         service.update(UPDATED_TERRA_MARE);
-        assertMatch(service.getPage(2).getContent(), POROSELLO, SALOTTO, UPDATED_TERRA_MARE);
+        assertMatch(service.getPage(1).getContent(), POROSELLO, SALOTTO, UPDATED_TERRA_MARE);
     }
 
     @Test
     public void create(){
         Restaurant newRestaurant = getCreated();
         Restaurant created = fromTo(service.create(newRestaurant));
-        assertMatch(service.getPage(2).getContent(), POROSELLO, SALOTTO, TERRA_MARE, created);
+        assertMatch(service.getPage(1).getContent(), POROSELLO, SALOTTO, TERRA_MARE, created);
     }
 
     @Test
     public void delete(){
         service.delete(RESTAURANT1_ID + 1); //delete SALOTTO
-        assertMatch(service.getPage(2).getContent(), POROSELLO, TERRA_MARE);
+        assertMatch(service.getPage(1).getContent(), POROSELLO, TERRA_MARE);
     }
 
     @Test
     public void get2ndPageWithMenu(){
-        PageTo<RestaurantWithMenuTo> rs = service.getPageWithMenu(2, LocalDate.of(2017, 12, 30));
+        PageTo<RestaurantWithMenuTo> rs = service.getPageWithMenu(1, LocalDate.of(2017, 12, 30));
         assertMatchWithMenu(rs.getContent(), RESTAURANTS_WITH_MENU_PAGE2);
     }
 }
