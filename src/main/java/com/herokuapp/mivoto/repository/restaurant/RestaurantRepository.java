@@ -1,15 +1,13 @@
-package com.herokuapp.mivoto.repository;
+package com.herokuapp.mivoto.repository.restaurant;
 
 import com.herokuapp.mivoto.model.Restaurant;
 import org.springframework.data.domain.Page;
 
 public interface RestaurantRepository {
 
-    Restaurant create(Restaurant restaurant);
+    Restaurant save(Restaurant restaurant);
 
-    void update(Restaurant restaurant);
-
-    void delete(int id);
+    boolean delete(int id);
 
     Restaurant get(int id);
 

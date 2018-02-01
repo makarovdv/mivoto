@@ -1,4 +1,4 @@
-package com.herokuapp.mivoto.repository;
+package com.herokuapp.mivoto.repository.restaurant;
 
 import com.herokuapp.mivoto.model.Restaurant;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,23 +22,22 @@ public class RestaurantRepositoryImpl implements RestaurantRepository{
     }
 
     @Override
-    public Restaurant create(Restaurant restaurant) {
-        return restaurantRepository.save(restaurant);
+    public Restaurant save(Restaurant restaurant) {
+        if (restaurant.isNew()) {
+            return restaurantRepository.save(restaurant);
+        } else {
+            return (get(restaurant.getId()) == null) ? null : restaurantRepository.save(restaurant);
+        }
     }
 
     @Override
-    public void update(Restaurant restaurant) {
-        restaurantRepository.save(restaurant);
-    }
-
-    @Override
-    public void delete(int id) {
-        restaurantRepository.deleteById(id);
+    public boolean delete(int id) {
+        return restaurantRepository.delete(id) != 0;
     }
 
     @Override
     public Restaurant get(int id) {
-        return restaurantRepository.getById(id);
+        return restaurantRepository.findById(id).orElse(null);
     }
 
     @Override

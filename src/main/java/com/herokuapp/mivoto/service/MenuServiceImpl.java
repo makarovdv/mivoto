@@ -1,7 +1,7 @@
 package com.herokuapp.mivoto.service;
 
 import com.herokuapp.mivoto.model.Menu;
-import com.herokuapp.mivoto.repository.CrudMenuRepository;
+import com.herokuapp.mivoto.repository.menu.MenuRepository;
 import com.herokuapp.mivoto.to.MenuTo;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +12,13 @@ import java.time.LocalDate;
 
 import static com.herokuapp.mivoto.utils.MenuUtil.asTo;
 import static com.herokuapp.mivoto.utils.MenuUtil.fromTo;
+import static com.herokuapp.mivoto.utils.ValidationUtil.checkNotFoundWithId;
 
 @Service
 @Transactional(readOnly = true)
 public class MenuServiceImpl implements MenuService {
-    private final CrudMenuRepository repository;
-
     @Autowired
-    public MenuServiceImpl(CrudMenuRepository repository) {
-        this.repository = repository;
-    }
+    private MenuRepository repository;
 
     @Override
     @Transactional
@@ -35,23 +32,24 @@ public class MenuServiceImpl implements MenuService {
     @Transactional
     @CacheEvict(value = "restaurants_with_menu", allEntries = true)
     public void update(MenuTo menu) {
-        repository.save(fromTo(menu));
+        checkNotFoundWithId(repository.save(fromTo(menu)), menu.getId());
     }
 
     @Override
     @Transactional
     @CacheEvict(value = "restaurants_with_menu", allEntries = true)
     public void delete(int id) {
-        repository.deleteById(id);
+        checkNotFoundWithId(repository.delete(id), id);
     }
 
     @Override
     public MenuTo get(int id) {
-        return asTo(repository.getById(id));
+        Menu menu = checkNotFoundWithId(repository.get(id), id);
+        return asTo(menu);
     }
 
     @Override
     public MenuTo get(LocalDate date, Integer restaurantId) {
-        return asTo(repository.getByDateAndRestaurantId(date, restaurantId));
+        return asTo(repository.get(date, restaurantId));
     }
 }

@@ -4,7 +4,10 @@ import com.herokuapp.mivoto.model.Restaurant;
 import com.herokuapp.mivoto.to.PageTo;
 import com.herokuapp.mivoto.to.RestaurantTo;
 import com.herokuapp.mivoto.to.RestaurantWithMenuTo;
+
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDate;
 
@@ -15,11 +18,38 @@ public class RestaurantServiceTest extends AbstractServiceTest{
     @Autowired
     private RestaurantService service;
 
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+
     @Test
-    public void get(){
+    public void get() throws NullPointerException {
         RestaurantTo restaurant = service.get(RESTAURANT1_ID);
         assertMatch(restaurant, TERRA_MARE);
     }
+
+    @Test
+    public void getNotFoundWithId() throws IllegalArgumentException {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Not found entity with id: 1");
+        service.get(1);
+    }
+
+    @Test
+    public void deleteNotFoundWithId() throws IllegalArgumentException {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Not found entity with id: 1");
+        service.delete(1);
+    }
+
+    @Test
+    public void updateNotFoundWithId() throws IllegalArgumentException {
+        thrown.expect(IllegalArgumentException.class);
+        thrown.expectMessage("Not found entity with id: 1");
+        Restaurant notExist = getCreated();
+        notExist.setId(1);
+        service.update(notExist);
+    }
+
     @Test
     public void get1stPage(){
         PageTo<RestaurantTo> rs = service.getPage(0);

@@ -2,8 +2,9 @@ package com.herokuapp.mivoto.service;
 
 import com.herokuapp.mivoto.model.Menu;
 import com.herokuapp.mivoto.model.Restaurant;
-import com.herokuapp.mivoto.repository.CrudMenuRepository;
-import com.herokuapp.mivoto.repository.RestaurantRepository;
+import com.herokuapp.mivoto.repository.menu.MenuRepository;
+import com.herokuapp.mivoto.repository.restaurant.RestaurantRepository;
+import com.herokuapp.mivoto.to.BaseTo;
 import com.herokuapp.mivoto.to.PageTo;
 import com.herokuapp.mivoto.to.RestaurantTo;
 import com.herokuapp.mivoto.to.RestaurantWithMenuTo;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import static com.herokuapp.mivoto.utils.RestaurantsUtil.asTo;
 import static com.herokuapp.mivoto.utils.RestaurantsUtil.asToWithMenu;
+import static com.herokuapp.mivoto.utils.ValidationUtil.checkNotFoundWithId;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -25,10 +27,10 @@ import static java.util.stream.Collectors.toList;
 public class RestaurantServiceImpl implements RestaurantService {
     private final RestaurantRepository restaurantRepository;
 
-    private final CrudMenuRepository menuRepository;
+    private final MenuRepository menuRepository;
 
     @Autowired
-    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, CrudMenuRepository menuRepository) {
+    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, MenuRepository menuRepository) {
         this.restaurantRepository = restaurantRepository;
         this.menuRepository = menuRepository;
     }
@@ -37,26 +39,27 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Transactional
     @Override
     public RestaurantTo create(Restaurant restaurant) {
-        return asTo(restaurantRepository.create(restaurant));
+        return asTo(restaurantRepository.save(restaurant));
     }
 
     @CacheEvict(value = {"restaurants", "restaurants_with_menu"}, allEntries = true)
     @Transactional
     @Override
     public void delete(int id) {
-        restaurantRepository.delete(id);
+        checkNotFoundWithId(restaurantRepository.delete(id), id);
     }
 
     @Override
     public RestaurantTo get(int id) {
-        return asTo(restaurantRepository.get(id));
+        Restaurant restaurant = checkNotFoundWithId(restaurantRepository.get(id),  id);
+        return asTo(restaurant);
     }
 
     @CacheEvict(value = {"restaurants", "restaurants_with_menu"}, allEntries = true)
     @Transactional
     @Override
     public void update(Restaurant restaurant) {
-        restaurantRepository.update(restaurant);
+        checkNotFoundWithId(restaurantRepository.save(restaurant), restaurant.getId());
     }
 
     @Override
@@ -71,7 +74,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         List<Integer> id = restaurants
                 .getContent()
                 .stream()
-                .map(r -> r.getId()).collect(toList());
+                .map(BaseTo::getId).collect(toList());
         List<Menu> menu = menuRepository.getByRestaurantId(id, date);
         return asToWithMenu(restaurants, menu);
     }
