@@ -21,41 +21,35 @@ public class VoteServiceTest extends AbstractServiceTest{
     private static final int COUNT = 3;
 
     @Test
-    public void create(){
-        voteBeforeEleven();
-        assertEquals((long)service.getCountOfVotesByRestaurantId(RESTAURANT1_ID + 1), COUNT + 1);
+    public void voteBeforeEleven(){
+        service.vote(RESTAURANT1_ID + 1, ADMIN_ID, LocalTime.of(10,0), LocalDate.of(2017,12,30));
+        assertEquals(service.getCountOfVotesByRestaurantId(RESTAURANT1_ID + 1), COUNT + 1);
     }
 
     @Test()
-    public void createAfterEleven(){
-        voteAfterEleven();
-    }
-
-    @Test
-    public void voteBeforeElevenTwice(){
-        voteBeforeEleven();
-        voteBeforeEleven();
+    public void voteAfterEleven(){
+        service.vote(RESTAURANT1_ID + 1, ADMIN_ID, LocalTime.of(12,0), LocalDate.of(2017,12,30));
         assertEquals(service.getCountOfVotesByRestaurantId(RESTAURANT1_ID + 1), COUNT + 1);
     }
 
     @Test
-    public void voteAfterElevenTwiceIllegal(){
+    public void revoteBeforeEleven(){
+        service.vote(RESTAURANT1_ID + 1, ADMIN_ID, LocalTime.of(10,0), LocalDate.of(2017,12,30));
+        service.vote(RESTAURANT1_ID + 2, ADMIN_ID, LocalTime.of(10,0), LocalDate.of(2017,12,30));
+        assertEquals(service.getCountOfVotesByRestaurantId(RESTAURANT1_ID + 1), COUNT);
+        assertEquals(service.getCountOfVotesByRestaurantId(RESTAURANT1_ID + 2), 1);
+    }
+
+    @Test
+    public void revoteAfterElevenIllegal(){
         thrown.expect(IllegalStateException.class);
         thrown.expectMessage("User can't re-vote after 11:00");
-        voteAfterEleven();
-        voteAfterEleven();
+        service.vote(RESTAURANT1_ID + 1, ADMIN_ID, LocalTime.of(10,0), LocalDate.of(2017,12,30));
+        service.vote(RESTAURANT1_ID + 2, ADMIN_ID, LocalTime.of(12,0), LocalDate.of(2017,12,30));
     }
 
     @Test
     public void getCountOfVotesByRestaurantId(){
         assertEquals(service.getCountOfVotesByRestaurantId(RESTAURANT1_ID + 1), COUNT);
-    }
-
-    public void voteBeforeEleven(){
-        service.vote(RESTAURANT1_ID + 1, ADMIN_ID, LocalTime.of(10,0), LocalDate.of(2017,12,30));
-    }
-
-    public void voteAfterEleven(){
-        service.vote(RESTAURANT1_ID + 1, ADMIN_ID, LocalTime.of(12,0), LocalDate.of(2017,12,30));
     }
 }
