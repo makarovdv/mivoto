@@ -20,11 +20,14 @@ public class MenuServiceImpl implements MenuService {
     @Autowired
     private MenuRepository repository;
 
+    @Autowired
+    private CacheEvictionService cacheEvictionService;
+
     @Override
     @Transactional
-    @CacheEvict(value = "restaurants_with_menu", allEntries = true)
     public MenuTo create(MenuTo menu) {
         Menu saved = repository.save(fromTo(menu));
+        cacheEvictionService.evict(menu.getDate().toString());
         return asTo(saved);
     }
 
@@ -33,13 +36,15 @@ public class MenuServiceImpl implements MenuService {
     @CacheEvict(value = "restaurants_with_menu", allEntries = true)
     public void update(MenuTo menu) {
         checkNotFoundWithId(repository.save(fromTo(menu)), menu.getId());
+        cacheEvictionService.clearKeys();
     }
 
     @Override
     @Transactional
-    @CacheEvict(value = "restaurants_with_menu", allEntries = true)
+    @CacheEvict(value = "restaurants_with_menu", allEntries = true) // assume removal is rare
     public void delete(int id) {
         checkNotFoundWithId(repository.delete(id), id);
+        cacheEvictionService.clearKeys();
     }
 
     @Override

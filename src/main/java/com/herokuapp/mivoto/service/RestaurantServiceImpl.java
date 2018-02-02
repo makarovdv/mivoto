@@ -10,7 +10,6 @@ import com.herokuapp.mivoto.to.RestaurantTo;
 import com.herokuapp.mivoto.to.RestaurantWithMenuTo;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,27 +24,26 @@ import static java.util.stream.Collectors.toList;
 @Service
 @Transactional(readOnly = true)
 public class RestaurantServiceImpl implements RestaurantService {
-    private final RestaurantRepository restaurantRepository;
-
-    private final MenuRepository menuRepository;
+    @Autowired
+    private RestaurantRepository restaurantRepository;
 
     @Autowired
-    public RestaurantServiceImpl(RestaurantRepository restaurantRepository, MenuRepository menuRepository) {
-        this.restaurantRepository = restaurantRepository;
-        this.menuRepository = menuRepository;
-    }
+    private MenuRepository menuRepository;
 
-    @CacheEvict(value = {"restaurants", "restaurants_with_menu"}, allEntries = true)
+    @Autowired
+    private CacheEvictionService cacheEvictionService;
+
     @Transactional
     @Override
     public RestaurantTo create(Restaurant restaurant) {
+        cacheEvictionService.evictAll();
         return asTo(restaurantRepository.save(restaurant));
     }
 
-    @CacheEvict(value = {"restaurants", "restaurants_with_menu"}, allEntries = true)
     @Transactional
     @Override
     public void delete(int id) {
+        cacheEvictionService.evictAll();
         checkNotFoundWithId(restaurantRepository.delete(id), id);
     }
 
@@ -55,10 +53,10 @@ public class RestaurantServiceImpl implements RestaurantService {
         return asTo(restaurant);
     }
 
-    @CacheEvict(value = {"restaurants", "restaurants_with_menu"}, allEntries = true)
     @Transactional
     @Override
     public void update(Restaurant restaurant) {
+        cacheEvictionService.evictAll();
         checkNotFoundWithId(restaurantRepository.save(restaurant), restaurant.getId());
     }
 
@@ -79,8 +77,9 @@ public class RestaurantServiceImpl implements RestaurantService {
         return asToWithMenu(restaurants, menu);
     }
 
-    @Cacheable("restaurants_with_menu")
+    @Cacheable(value = "restaurants_with_menu", key="#date.toString().concat(#page)")
     public PageTo<RestaurantWithMenuTo> getPageOnlyWithMenu(int page, LocalDate date){
+        cacheEvictionService.addKeyToSet(date.toString() + page);
         return asToWithMenu(menuRepository.getPage(page, date));
     }
 }
