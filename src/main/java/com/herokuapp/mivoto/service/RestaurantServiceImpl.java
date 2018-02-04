@@ -36,14 +36,14 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Transactional
     @Override
     public RestaurantTo create(Restaurant restaurant) {
-        cacheEvictionService.evictAll();
+        cacheEvictionService.evictAllRestaurantsAndMenu();
         return asTo(restaurantRepository.create(restaurant));
     }
 
     @Transactional
     @Override
     public void delete(int id) {
-        cacheEvictionService.evictAll();
+        cacheEvictionService.evictAllRestaurantsAndMenu();
         checkNotFoundWithId(restaurantRepository.delete(id), id);
     }
 
@@ -56,7 +56,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Transactional
     @Override
     public void update(Restaurant restaurant) {
-        cacheEvictionService.evictAll();
+        cacheEvictionService.evictAllRestaurantsAndMenu();
         checkNotFoundWithId(restaurantRepository.update(restaurant), restaurant.getId());
     }
 

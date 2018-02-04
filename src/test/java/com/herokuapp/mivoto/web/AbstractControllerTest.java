@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -43,6 +44,9 @@ abstract public class AbstractControllerTest {
     private CacheEvictionService cacheEvictionService;
 
     @Autowired
+    private CacheManager cacheManager;
+
+    @Autowired
     private WebApplicationContext webApplicationContext;
 
     abstract protected String getRestUrl();
@@ -64,6 +68,7 @@ abstract public class AbstractControllerTest {
 
     @Before
     public void setUp() {
-        cacheEvictionService.evictAll();
+        cacheEvictionService.evictAllRestaurantsAndMenu();
+        cacheManager.getCache("users").clear();
     }
 }

@@ -34,7 +34,7 @@ public class CacheEvictionServiceImpl implements CacheEvictionService {
     }
 
     @Override
-    public void evictAll() {
+    public void evictAllRestaurantsAndMenu() {
         clearKeys();
         cacheManager.getCache("restaurants").clear();
         cacheManager.getCache("restaurants_with_menu").clear();

@@ -16,8 +16,13 @@ public interface CrudUserRepository extends JpaRepository<User, Integer> {
     @Modifying
     int delete(@Param("id") int id);
 
-    @Override
-    User save(User user);
+    default User createOrUpdate(User user){
+        if (user.isNew()) {
+            return save(user);
+        } else {
+            return get(user.getId()) != null ? save(user) : null;
+        }
+    }
 
     default User get(int id){
         return findById(id).orElse(null);

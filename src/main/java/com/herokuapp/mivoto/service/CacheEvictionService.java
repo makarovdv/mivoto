@@ -14,9 +14,9 @@ public interface CacheEvictionService {
 
     // Evicts all entries in cache("restaurants", "restaurants_with_menu")
     // and clear set cached of keys for eviction
-    void evictAll();
+    void evictAllRestaurantsAndMenu();
 
-    // Clear set cached of keys for eviction
+    // Clear set of cached keys for eviction
     void clearKeys();
 }
 

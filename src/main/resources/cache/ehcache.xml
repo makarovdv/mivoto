@@ -12,6 +12,13 @@
         <heap unit="entries">5000</heap>
     </cache-template>
 
+    <cache-template name="nonExpiryUsersCache">
+        <expiry>
+            <none/>
+        </expiry>
+        <heap>1000</heap>
+    </cache-template>
+
     <cache-template name="nonExpiryRestaurantsCache">
         <expiry>
             <none/>
@@ -25,6 +32,8 @@
         </expiry>
         <heap>30</heap>
     </cache-template>
+
+    <cache alias="users" uses-template="nonExpiryUsersCache"/>
 
     <cache alias="restaurants" uses-template="nonExpiryRestaurantsCache"/>
 

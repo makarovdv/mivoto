@@ -4,6 +4,8 @@ import com.herokuapp.mivoto.model.Role;
 import com.herokuapp.mivoto.model.User;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -14,6 +16,15 @@ public  class UserServiceTest extends AbstractServiceTest {
 
     @Autowired
     protected UserService service;
+
+    @Autowired
+    private CacheManager cacheManager;
+
+    @Override
+    public void setUp() {
+        super.setUp();
+        cacheManager.getCache("users").clear();
+    }
 
     @Test
     public void create() {
@@ -30,7 +41,7 @@ public  class UserServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void get() throws Exception {
+    public void get() {
         User user = service.get(ADMIN_ID);
         assertMatch(user, ADMIN);
     }
@@ -51,7 +62,7 @@ public  class UserServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void getAll() throws Exception {
+    public void getAll() {
         List<User> all = service.getAll();
         assertMatch(all, ADMIN, USER);
     }
