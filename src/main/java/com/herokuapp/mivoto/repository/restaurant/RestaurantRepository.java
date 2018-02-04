@@ -5,7 +5,9 @@ import org.springframework.data.domain.Page;
 
 public interface RestaurantRepository {
 
-    Restaurant save(Restaurant restaurant);
+    Restaurant create(Restaurant restaurant);
+
+    Restaurant update(Restaurant restaurant);
 
     boolean delete(int id);
 

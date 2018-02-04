@@ -22,12 +22,13 @@ public class RestaurantRepositoryImpl implements RestaurantRepository{
     }
 
     @Override
-    public Restaurant save(Restaurant restaurant) {
-        if (restaurant.isNew()) {
-            return restaurantRepository.save(restaurant);
-        } else {
-            return (get(restaurant.getId()) == null) ? null : restaurantRepository.save(restaurant);
-        }
+    public Restaurant create(Restaurant restaurant) {
+        return restaurantRepository.save(restaurant);
+    }
+
+    @Override
+    public Restaurant update(Restaurant r) {
+        return restaurantRepository.update(r.getName(), r.getAddress(), r.getPhone(), r.getId()) != 0 ? r : null;
     }
 
     @Override
