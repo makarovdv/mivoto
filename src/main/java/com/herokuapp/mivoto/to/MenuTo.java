@@ -1,12 +1,16 @@
 package com.herokuapp.mivoto.to;
 
 import com.herokuapp.mivoto.model.Dish;
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Set;
 
 public class MenuTo extends BaseTo{
     private LocalDate date;
+
+    @Valid
     private Set<Dish> dishes;
+
     private Integer restaurantId;
 
     public MenuTo() {}

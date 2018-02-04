@@ -1,8 +1,7 @@
 package com.herokuapp.mivoto.model;
 
 import javax.persistence.*;
-import java.util.Collections;
-import java.util.Set;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "restaurants")
@@ -25,8 +24,10 @@ public class Restaurant extends AbstractNamedEntity {
         this.phone = phone;
     }
 
+    @Size(max = 100)
     private String address;
 
+    @Size(max = 50)
     private String phone;
 
     public String getAddress() {
