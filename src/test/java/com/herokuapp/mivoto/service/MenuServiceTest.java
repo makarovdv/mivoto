@@ -6,9 +6,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
 
 import static com.herokuapp.mivoto.DishTestData.THE_PORKIE;
 import static com.herokuapp.mivoto.MenuTestData.*;
@@ -40,9 +38,8 @@ public class MenuServiceTest extends AbstractServiceTest {
 
     @Test
     public void update(){
-        MenuTo menu = UPDATED_MENU1;
-        service.update(menu);
-        assertMatch(service.get(menu.getId()), UPDATED_MENU1);
+        service.update(UPDATED_MENU1);
+        assertMatch(service.get(UPDATED_MENU1.getId()), UPDATED_MENU1);
     }
 
     @Test

@@ -39,7 +39,8 @@ public class RestaurantRestControllerTest extends AbstractAdminRestControllerTes
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(ADMIN))
-                .content(JsonUtil.writeValue(created)));
+                .content(JsonUtil.writeValue(created)))
+                .andExpect(status().isCreated());
 
         RestaurantTo returned = TestUtil.readFromJson(action, RestaurantTo.class);
         Integer id = returned.getId();
@@ -71,7 +72,7 @@ public class RestaurantRestControllerTest extends AbstractAdminRestControllerTes
 
     @Test
     public void testGetPageWithMenu() throws Exception {
-            ResultActions action = mockMvc.perform(get(REST_URL + "menu/by?page=1&date=2017-12-30")
+            mockMvc.perform(get(REST_URL + "menu/by?page=1&date=2017-12-30")
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andDo(print())

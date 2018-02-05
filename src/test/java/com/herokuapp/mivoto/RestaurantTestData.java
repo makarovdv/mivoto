@@ -14,6 +14,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class RestaurantTestData {
+    private static Comparator<RestaurantWithMenuTo> RESTAURANT_WITH_MENU_COMPARATOR = (r1, r2) -> {
+        int result;
+        if ((result = Integer.compare(r1.getId(), r2.getId()))!=0) return result;
+        if ((result = r1.getAddress().compareTo(r2.getAddress()))!=0) return result;
+        if ((result = r1.getPhone().compareTo(r2.getPhone()))!=0) return result;
+        return MENU_TO_COMPARATOR.compare(r1.getMenu(), r2.getMenu());
+    };
+
     public static final int RESTAURANT1_ID = START_SEQ + 2; // next after 2 users
 
     public static final Restaurant TERRA_MARE = new Restaurant(RESTAURANT1_ID,"TerraMare", "Tsvetnoi Blvd., 20/1","+74956081519");
@@ -42,16 +50,6 @@ public class RestaurantTestData {
             new RestaurantWithMenuTo(asTo(TERRA_MARE), MENU1)
     };
     public static final PageTo<RestaurantWithMenuTo> RESTAURANTS_WITH_MENU_PAGE2TO = new PageTo<>(Arrays.asList(RESTAURANTS_WITH_MENU_PAGE2),1, 10, 2);
-
-    private static Comparator<RestaurantWithMenuTo> RESTAURANT_WITH_MENU_COMPARATOR = (r1, r2) -> {
-        int id = Integer.compare(r1.getId(), r2.getId());
-        if (id!=0) return id;
-        int address = r1.getAddress().compareTo(r1.getAddress());
-        if (address!=0) return address;
-        int phone = r1.getPhone().compareTo(r1.getPhone());
-        if (phone!=0) return phone;
-        return MENU_TO_COMPARATOR.compare(r1.getMenu(), r2.getMenu());
-    };
 
     public static Restaurant getCreated(){
         return new Restaurant(null, "Via Romano", "Lavochkina St., 34, Moscow 125581, Russia", "+74955453480");

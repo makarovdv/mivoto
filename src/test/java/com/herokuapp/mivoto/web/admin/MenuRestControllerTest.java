@@ -69,7 +69,8 @@ public class MenuRestControllerTest extends AbstractAdminRestControllerTest {
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(ADMIN))
-                .content(JsonUtil.writeValue(created)));
+                .content(JsonUtil.writeValue(created)))
+                .andExpect(status().isCreated());
 
         MenuTo returned = TestUtil.readFromJson(action, MenuTo.class);
         Integer id = returned.getId();
