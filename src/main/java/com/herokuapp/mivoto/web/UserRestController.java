@@ -10,6 +10,7 @@ import com.herokuapp.mivoto.to.RestaurantWithMenuTo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +33,7 @@ public class UserRestController {
     @Autowired
     private MenuService menuService;
 
+    @ResponseStatus(HttpStatus.OK)
     @PostMapping(value = "/vote/restaurant", produces = MediaType.APPLICATION_JSON_VALUE)
     public void voteFor(@RequestParam int id) {
         LocalDate now = getTodaysDate();
@@ -40,7 +42,7 @@ public class UserRestController {
     }
 
     @GetMapping(value = "/restaurant/menu/by", produces = MediaType.APPLICATION_JSON_VALUE)
-    public PageTo<RestaurantWithMenuTo> getRestaurantPageWithMenu(@RequestParam("page") int page) {
+    public PageTo<RestaurantWithMenuTo> getRestaurantPageWithMenu(@RequestParam(name = "page", defaultValue = "0") int page) {
         LocalDate now = getTodaysDate();
         log.info("get restaurants with menu page {} for date {}", page, now);
         return restaurantService.getPageOnlyWithMenu(page, now);

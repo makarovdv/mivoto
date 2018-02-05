@@ -20,7 +20,7 @@ public class CommonRestController {
     private RestaurantService restaurantService;
 
     @GetMapping(value = "/by", produces = MediaType.APPLICATION_JSON_VALUE)
-    public PageTo<RestaurantTo> getRestaurantPageWithMenu(@RequestParam("page") int page) {
+    public PageTo<RestaurantTo> getRestaurantPage(@RequestParam(name = "page", defaultValue = "0") int page) {
         log.info("get restaurants page {}", page);
         return restaurantService.getPage(page);
     }
