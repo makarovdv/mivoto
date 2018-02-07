@@ -8,8 +8,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public interface CrudVoteRepository extends JpaRepository<Vote, Integer>{
-    Vote getById(Integer id);
-
     Vote getByDateAndUserId(LocalDate date, Integer user_id);
 
     default Vote create(Vote vote, LocalTime currentTime){

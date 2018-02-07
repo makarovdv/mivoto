@@ -24,15 +24,11 @@ public class VoteServiceImpl implements VoteService{
 
     @Transactional
     @Override
-    public Vote vote(Integer restaurantId, Integer userId, LocalTime currentTime, LocalDate currentDate) {
+    public void vote(Integer restaurantId, Integer userId, LocalTime currentTime, LocalDate currentDate) {
         Vote vote = repository.create(new Vote(currentDate, new Restaurant(restaurantId), new User(userId)), currentTime);
         if (vote == null) throw new IllegalStateException("User can't re-vote after 11:00");
-        return vote;
     }
 
-    public Vote get(int id){
-        return repository.getById(id);
-    }
     @Override
     public int getCountOfVotesByRestaurantId(int id) {
         return repository.getCountOfVotesByRestaurantId(id);

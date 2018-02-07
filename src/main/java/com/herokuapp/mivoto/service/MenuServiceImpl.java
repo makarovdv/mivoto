@@ -12,6 +12,7 @@ import java.time.LocalDate;
 
 import static com.herokuapp.mivoto.utils.MenuUtil.asTo;
 import static com.herokuapp.mivoto.utils.MenuUtil.fromTo;
+import static com.herokuapp.mivoto.utils.ValidationUtil.checkNotFound;
 import static com.herokuapp.mivoto.utils.ValidationUtil.checkNotFoundWithId;
 
 @Service
@@ -55,6 +56,8 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public MenuTo get(LocalDate date, Integer restaurantId) {
-        return asTo(repository.get(date, restaurantId));
+        Menu menu = repository.get(date, restaurantId);
+        checkNotFound(menu!=null, String.format("restaurantId: %d, for date: %tF", restaurantId, date));
+        return asTo(menu);
     }
 }

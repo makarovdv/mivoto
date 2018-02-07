@@ -1,12 +1,8 @@
 package com.herokuapp.mivoto.web;
 
 import com.herokuapp.mivoto.AuthorizedUser;
-import com.herokuapp.mivoto.service.MenuService;
-import com.herokuapp.mivoto.service.RestaurantService;
-import com.herokuapp.mivoto.service.VoteService;
-import com.herokuapp.mivoto.to.MenuTo;
-import com.herokuapp.mivoto.to.PageTo;
-import com.herokuapp.mivoto.to.RestaurantWithMenuTo;
+import com.herokuapp.mivoto.service.*;
+import com.herokuapp.mivoto.to.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,28 +30,32 @@ public class UserRestController {
     private MenuService menuService;
 
     @ResponseStatus(HttpStatus.OK)
-    @PostMapping(value = "/vote/restaurant", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/votes/restaurants", produces = MediaType.APPLICATION_JSON_VALUE)
     public void voteFor(@RequestParam int id) {
-        LocalDate now = getTodaysDate();
+        LocalDate now = getCurrentDate();
         log.info("vote for restaurant {} date {}", id, now);
-        voteService.vote(id, AuthorizedUser.id(), LocalTime.now(), now);
+        voteService.vote(id, AuthorizedUser.id(), getCurrentTime(), now);
     }
 
-    @GetMapping(value = "/restaurant/menu/by", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/restaurants/menu/by", produces = MediaType.APPLICATION_JSON_VALUE)
     public PageTo<RestaurantWithMenuTo> getRestaurantPageWithMenu(@RequestParam(name = "page", defaultValue = "0") int page) {
-        LocalDate now = getTodaysDate();
+        LocalDate now = getCurrentDate();
         log.info("get restaurants with menu page {} for date {}", page, now);
         return restaurantService.getPageOnlyWithMenu(page, now);
     }
 
     @GetMapping(value = "/menu/by", produces = MediaType.APPLICATION_JSON_VALUE)
     public MenuTo getMenu(@RequestParam("restaurantId") int restaurantId) {
-        LocalDate now = getTodaysDate();
+        LocalDate now = getCurrentDate();
         log.info("get menu restaurantId {} for date {}", restaurantId, now);
         return menuService.get(now, restaurantId);
     }
 
-    private LocalDate getTodaysDate(){
+    protected LocalDate getCurrentDate(){
         return LocalDate.now();
+    }
+
+    protected LocalTime getCurrentTime(){
+        return LocalTime.now();
     }
 }

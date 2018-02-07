@@ -19,8 +19,7 @@ public class CacheEvictionServiceImpl implements CacheEvictionService {
         this.cachedKeys.add(key);
     }
 
-    @Override
-    public List<String> findKeyByPartialKey(String partialKey) {
+    private List<String> findKeyByPartialKey(String partialKey) {
         return cachedKeys.stream()
                 .filter(k -> k.contains(partialKey))
                 .collect(Collectors.toList());

@@ -1,65 +1,89 @@
 package com.herokuapp.mivoto.service;
 
 import com.herokuapp.mivoto.to.MenuTo;
+import com.herokuapp.mivoto.to.PageTo;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
 import java.time.LocalDate;
 import java.util.Collections;
 
+import static junit.framework.TestCase.assertTrue;
 import static com.herokuapp.mivoto.DishTestData.THE_PORKIE;
 import static com.herokuapp.mivoto.MenuTestData.*;
 import static com.herokuapp.mivoto.RestaurantTestData.RESTAURANT1_ID;
 
 public class MenuServiceTest extends AbstractServiceTest {
     @Autowired
-    private MenuService service;
+    private MenuService menuService;
+
+    @Autowired
+    private RestaurantService restaurantService;
+
+    @Autowired
+    private CacheManager cacheManager;
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
     public void get(){
-        MenuTo menu = service.get(MENU1_ID);
+        MenuTo menu = menuService.get(MENU1_ID);
         assertMatch(menu, MENU1);
     }
 
     @Test
     public void getByDateAndRestaurantId(){
-        MenuTo menu = service.get(LocalDate.of(2017, 12, 30), RESTAURANT1_ID);
+        MenuTo menu = menuService.get(LocalDate.of(2017, 12, 30), RESTAURANT1_ID);
         assertMatch(menu, MENU1);
     }
     @Test
     public void create(){
-        MenuTo menu = service.create(getCreated());
-        assertMatch(service.get(menu.getId()), menu);
+        MenuTo menu = menuService.create(getCreated());
+        assertMatch(menuService.get(menu.getId()), menu);
     }
 
     @Test
     public void update(){
-        service.update(UPDATED_MENU1);
-        assertMatch(service.get(UPDATED_MENU1.getId()), UPDATED_MENU1);
+        menuService.update(UPDATED_MENU1);
+        assertMatch(menuService.get(UPDATED_MENU1.getId()), UPDATED_MENU1);
     }
 
     @Test
     public void getNotFoundWithId(){
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Not found entity with id: 1");
-        service.get(1);
+        menuService.get(1);
     }
 
     @Test
     public void deleteNotFoundWithId(){
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Not found entity with id: 1");
-        service.delete(1);
+        menuService.delete(1);
     }
 
     @Test
     public void updateNotFoundWithId(){
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Not found entity with id: 1");
-        service.update(new MenuTo( 1, LocalDate.of(2017,12,25), Collections.singleton(THE_PORKIE), RESTAURANT1_ID + 4));
+        menuService.update(new MenuTo( 1, LocalDate.of(2017,12,25), Collections.singleton(THE_PORKIE), RESTAURANT1_ID + 4));
+    }
+
+    @Test
+    public void evictCacheByDate(){
+        restaurantService.getPageOnlyWithMenu(0, LocalDate.of(2017, 12, 30));
+        restaurantService.getPageOnlyWithMenu(0, LocalDate.of(2017, 12, 31));
+        menuService.create(getCreated()); // create menu with date 2017-12-31
+        assertTrue(getCache().get("2017-12-300", PageTo.class) != null);
+        assertTrue(getCache().get("2017-12-310", PageTo.class) == null);
+    }
+
+    private Cache getCache(){
+        return cacheManager.getCache("restaurants_with_menu");
     }
 }

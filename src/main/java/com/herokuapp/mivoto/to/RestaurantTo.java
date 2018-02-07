@@ -1,7 +1,5 @@
 package com.herokuapp.mivoto.to;
 
-import com.herokuapp.mivoto.HasId;
-
 public class RestaurantTo extends BaseTo{
     protected String name;
     protected String address;
