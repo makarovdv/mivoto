@@ -5,6 +5,4 @@ import java.time.LocalTime;
 
 public interface VoteService {
     void vote(Integer restaurantId, Integer userId, LocalTime currentTime, LocalDate currentDate);
-
-    int getCountOfVotesByRestaurantId(int id);
 }

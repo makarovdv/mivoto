@@ -23,28 +23,24 @@ P.S.: Make sure everything works with latest version that is on github :)
 
 P.P.S.: Asume that your API will be used by a frontend developer to build frontend on top of that.
 
-### Краткое описание
 
-В проекте используются: Java 8, Maven, Hibernate, Spring(Security, Data JPA, MVC), Jackson.
+### Short description
 
-База данных HSQLDB.
+Technologies: Java 8, Maven, HSQLDB, Hibernate, Spring(Security, Data JPA, MVC), Jackson.
 
-С помощью Ehcache кешируются запросы на выборку:
-* пользователей по email,
-* ресторанов для пользователей и администраторов,
-* ресторанов вместе с меню для голосования пользователей.
+The following data is cached using Ehcache:
+* restaurants for users and admins
+* restaurants with menu for voting
 
-*Создание нового меню удаляет из кеша не все страницы ресторанов с меню, а только за определенную дату, с помощью CacheEvictionService*
+To deploy, install Tomcat 8 and Maven.
 
-Для запуска нужно установить Tomcat8 и Maven.
-
-Проект упаковать командой
+Make WAR file:
 
 `mvn package`
 
-Полученный mivoto.war развернуть с помощью Tomcat8
+Delploy "mivoto.war" using Tomcat 8.
 
-Ниже приведены примеры curl команд
+### CURL 
 
 ##### vote for restaurant
 `curl -i -d "id=100005" -H "Content-Type: application/x-www-form-urlencoded" -X POST http://localhost:8080/mivoto/rest/user/votes/restaurants --user user@yandex.ru:pass`
@@ -74,9 +70,9 @@ P.P.S.: Asume that your API will be used by a frontend developer to build fronte
 `curl -i -s "http://localhost:8080/mivoto/rest/admin/menu/100015" --user admin@gmail.com:password`
 
 ##### get page with restaurants
-`curl -i -s "http://localhost:8080/mivoto/rest/common/restaurants/by?page=0" --user admin@gmail.com:password`
+`curl -i -s "http://localhost:8080/mivoto/rest/user/restaurants/by?page=0" --user admin@gmail.com:password`
 
-`curl -i -s "http://localhost:8080/mivoto/rest/common/restaurants/by?page=0" --user user@yandex.ru:pass`
+`curl -i -s "http://localhost:8080/mivoto/rest/user/restaurants/by?page=0" --user user@yandex.ru:pass`
 
 ##### get page with restaurants and menu
 `curl -i -s "http://localhost:8080/mivoto/rest/admin/restaurants/menu/by?page=0&date=2017-12-30" --user admin@gmail.com:password`

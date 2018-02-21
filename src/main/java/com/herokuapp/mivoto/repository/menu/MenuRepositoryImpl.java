@@ -2,6 +2,7 @@ package com.herokuapp.mivoto.repository.menu;
 
 import com.herokuapp.mivoto.model.Menu;
 
+import com.herokuapp.mivoto.repository.restaurant.CrudRestaurantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,41 +13,45 @@ import java.util.List;
 @Repository
 public class MenuRepositoryImpl implements MenuRepository {
     @Autowired
-    private CrudMenuRepository repository;
+    private CrudMenuRepository menuRepository;
+
+    @Autowired
+    private CrudRestaurantRepository restaurantRepository;
 
     private int PAGE_SIZE = 10;
 
     @Override
-    public Menu save(Menu menu) {
+    public Menu save(Menu menu, Integer restaurantId) {
+        menu.setRestaurant(restaurantRepository.getOne(restaurantId));
         if (menu.isNew()) {
-            return repository.save(menu);
+            return menuRepository.save(menu);
         } else{
-            return (get(menu.getId()) == null) ? null : repository.save(menu);
+            return (get(menu.getId()) == null) ? null : menuRepository.save(menu);
         }
     }
 
     @Override
     public boolean delete(int id) {
-        return repository.delete(id) != 0;
+        return menuRepository.delete(id) != 0;
     }
 
     @Override
     public Menu get(int id) {
-        return repository.findById(id).orElse(null);
+        return menuRepository.findById(id).orElse(null);
     }
 
     @Override
     public Page<Menu> getPage(int page, LocalDate date) {
-        return repository.findAll(PageRequest.of(page,PAGE_SIZE), date);
+        return menuRepository.findAll(PageRequest.of(page,PAGE_SIZE), date);
     }
 
     @Override
-    public List<Menu> getByRestaurantId(List<Integer> id, LocalDate date) {
-        return repository.getByRestaurantId(id, date);
+    public List<Menu> getByRestaurantIds(List<Integer> id, LocalDate date) {
+        return menuRepository.getByRestaurantIds(id, date);
     }
 
     @Override
-    public Menu get(LocalDate date, Integer restaurantId) {
-        return repository.getByDateAndRestaurantId(date, restaurantId);
+    public Menu getByRestaurantId(Integer restaurantId, LocalDate date) {
+        return menuRepository.getByRestaurantId(restaurantId, date);
     }
 }

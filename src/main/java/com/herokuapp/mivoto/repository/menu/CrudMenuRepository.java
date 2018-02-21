@@ -23,7 +23,8 @@ public interface CrudMenuRepository extends JpaRepository<Menu, Integer>{
     Page<Menu> findAll(Pageable pageable, @Param("date")LocalDate date);
 
     @Query("SELECT m FROM Menu m WHERE m.restaurant.id IN ?1 AND m.date = ?2")
-    List<Menu> getByRestaurantId(List<Integer> id, LocalDate date);
+    List<Menu> getByRestaurantIds(List<Integer> ids, LocalDate date);
 
-    Menu getByDateAndRestaurantId(LocalDate date, Integer restaurantId);
+    @Query("SELECT m FROM Menu m WHERE m.restaurant.id = ?1 AND m.date = ?2")
+    Menu getByRestaurantId(Integer restaurantId, LocalDate date);
 }

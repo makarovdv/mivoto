@@ -13,17 +13,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 @RestControllerAdvice(annotations = RestController.class)
 @Order(Ordered.HIGHEST_PRECEDENCE + 5)
 public class ExceptionInfoHandler {
     private static Logger log = LoggerFactory.getLogger(ExceptionInfoHandler.class);
 
+    private static final Map<String, String> UNIQUE_INDEXES = Collections.unmodifiableMap(
+            new HashMap<String, String>(){
+                {
+                    put("menu_unique_restaurant_and_date_idx", "menu for this date already exists");
+                    put("restaurants_unique_name", "restaurant with this name already exists");
+                }
+            });
     //  http://stackoverflow.com/a/22358422/548473
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(IllegalArgumentException.class)
@@ -65,8 +70,11 @@ public class ExceptionInfoHandler {
         String rootMsg = ValidationUtil.getRootCause(e).getMessage();
         if (rootMsg != null) {
             String lowerCaseMsg = rootMsg.toLowerCase();
-            if (lowerCaseMsg.contains("menu_unique_restaurant_and_date_idx")) {
-                return logAndGetErrorInfo(req, e, false, ErrorType.DATA_ERROR, "menu for this date already exists");
+            Optional<Map.Entry<String, String>> entry = UNIQUE_INDEXES.entrySet().stream()
+                    .filter(ui -> lowerCaseMsg.contains(ui.getKey()))
+                    .findAny();
+            if (entry.isPresent()) {
+                return logAndGetErrorInfo(req, e, false, ErrorType.DATA_ERROR, entry.get().getValue());
             }
         }
         return logAndGetErrorInfo(req, e, true, ErrorType.DATA_ERROR);

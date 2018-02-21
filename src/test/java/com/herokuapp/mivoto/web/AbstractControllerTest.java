@@ -1,6 +1,5 @@
 package com.herokuapp.mivoto.web;
 
-import com.herokuapp.mivoto.service.CacheEvictionService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,9 +40,6 @@ abstract public class AbstractControllerTest {
     protected MockMvc mockMvc;
 
     @Autowired
-    private CacheEvictionService cacheEvictionService;
-
-    @Autowired
     private CacheManager cacheManager;
 
     @Autowired
@@ -68,7 +64,7 @@ abstract public class AbstractControllerTest {
 
     @Before
     public void setUp() {
-        cacheEvictionService.evictAllRestaurantsAndMenu();
-        cacheManager.getCache("users").clear();
+        cacheManager.getCache("restaurants").clear();
+        cacheManager.getCache("restaurants_with_menu").clear();
     }
 }

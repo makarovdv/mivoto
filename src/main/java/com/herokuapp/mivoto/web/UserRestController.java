@@ -51,6 +51,12 @@ public class UserRestController {
         return menuService.get(now, restaurantId);
     }
 
+    @GetMapping(value = "/restaurants/by", produces = MediaType.APPLICATION_JSON_VALUE)
+    public PageTo<RestaurantTo> getRestaurantPage(@RequestParam(name = "page", defaultValue = "0") int page) {
+        log.info("get restaurants page {}", page);
+        return restaurantService.getPage(page);
+    }
+
     protected LocalDate getCurrentDate(){
         return LocalDate.now();
     }

@@ -1,9 +1,7 @@
 package com.herokuapp.mivoto.service;
 
 import com.herokuapp.mivoto.model.Restaurant;
-import com.herokuapp.mivoto.to.PageTo;
-import com.herokuapp.mivoto.to.RestaurantTo;
-import com.herokuapp.mivoto.to.RestaurantWithMenuTo;
+import com.herokuapp.mivoto.to.*;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -22,7 +20,7 @@ public class RestaurantServiceTest extends AbstractServiceTest{
     public ExpectedException thrown = ExpectedException.none();
 
     @Test
-    public void get() throws NullPointerException {
+    public void get() {
         RestaurantTo restaurant = service.get(RESTAURANT1_ID);
         assertMatch(restaurant, TERRA_MARE);
     }

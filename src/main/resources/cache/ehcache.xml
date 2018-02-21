@@ -5,37 +5,14 @@
     <!--http://www.ehcache.org/documentation/3.4/xml.html-->
     <!--http://www.ehcache.org/documentation/3.1/107.html#supplement-jsr-107-configurations-->
 
-    <cache-template name="expiryCache">
-        <expiry>
-            <ttl unit="minutes">5</ttl>
-        </expiry>
-        <heap unit="entries">5000</heap>
-    </cache-template>
-
-    <cache-template name="nonExpiryUsersCache">
-        <expiry>
-            <none/>
-        </expiry>
-        <heap>1000</heap>
-    </cache-template>
-
-    <cache-template name="nonExpiryRestaurantsCache">
+    <cache-template name="nonExpiryCache">
         <expiry>
             <none/>
         </expiry>
         <heap>30</heap>
     </cache-template>
 
-    <cache-template name="expiryRestaurantsWithMenuCache">
-        <expiry>
-            <ttl unit="days">1</ttl>
-        </expiry>
-        <heap>30</heap>
-    </cache-template>
+    <cache alias="restaurants" uses-template="nonExpiryCache"/>
 
-    <cache alias="users" uses-template="nonExpiryUsersCache"/>
-
-    <cache alias="restaurants" uses-template="nonExpiryRestaurantsCache"/>
-
-    <cache alias="restaurants_with_menu" uses-template="expiryRestaurantsWithMenuCache"/>
+    <cache alias="restaurants_with_menu" uses-template="nonExpiryCache"/>
 </config>

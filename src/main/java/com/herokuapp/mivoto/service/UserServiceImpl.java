@@ -4,8 +4,6 @@ import com.herokuapp.mivoto.AuthorizedUser;
 import com.herokuapp.mivoto.model.User;
 import com.herokuapp.mivoto.repository.CrudUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,7 +30,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Transactional
-    @CacheEvict(value = "users", allEntries = true)
     @Override
     public void delete(int id) {
         repository.delete(id);
@@ -44,7 +41,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    @Cacheable("users")
     public User getByEmail(String email) {
         return repository.getByEmail(email);
     }
@@ -55,7 +51,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Transactional
-    @CacheEvict(value = "users", key="#user.email")
     @Override
     public void update(User user) {
         repository.createOrUpdate(user);

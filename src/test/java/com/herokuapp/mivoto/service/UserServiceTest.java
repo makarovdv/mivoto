@@ -2,10 +2,9 @@ package com.herokuapp.mivoto.service;
 
 import com.herokuapp.mivoto.model.Role;
 import com.herokuapp.mivoto.model.User;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
-
 import java.util.Collections;
 import java.util.List;
 
@@ -16,15 +15,6 @@ public  class UserServiceTest extends AbstractServiceTest {
 
     @Autowired
     protected UserService service;
-
-    @Autowired
-    private CacheManager cacheManager;
-
-    @Override
-    public void setUp() {
-        super.setUp();
-        cacheManager.getCache("users").clear();
-    }
 
     @Test
     public void create() {

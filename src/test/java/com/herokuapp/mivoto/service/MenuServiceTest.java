@@ -1,7 +1,6 @@
 package com.herokuapp.mivoto.service;
 
 import com.herokuapp.mivoto.to.MenuTo;
-import com.herokuapp.mivoto.to.PageTo;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -12,7 +11,6 @@ import org.springframework.cache.CacheManager;
 import java.time.LocalDate;
 import java.util.Collections;
 
-import static junit.framework.TestCase.assertTrue;
 import static com.herokuapp.mivoto.DishTestData.THE_PORKIE;
 import static com.herokuapp.mivoto.MenuTestData.*;
 import static com.herokuapp.mivoto.RestaurantTestData.RESTAURANT1_ID;
@@ -20,9 +18,6 @@ import static com.herokuapp.mivoto.RestaurantTestData.RESTAURANT1_ID;
 public class MenuServiceTest extends AbstractServiceTest {
     @Autowired
     private MenuService menuService;
-
-    @Autowired
-    private RestaurantService restaurantService;
 
     @Autowired
     private CacheManager cacheManager;
@@ -72,15 +67,6 @@ public class MenuServiceTest extends AbstractServiceTest {
         thrown.expect(IllegalArgumentException.class);
         thrown.expectMessage("Not found entity with id: 1");
         menuService.update(new MenuTo( 1, LocalDate.of(2017,12,25), Collections.singleton(THE_PORKIE), RESTAURANT1_ID + 4));
-    }
-
-    @Test
-    public void evictCacheByDate(){
-        restaurantService.getPageOnlyWithMenu(0, LocalDate.of(2017, 12, 30));
-        restaurantService.getPageOnlyWithMenu(0, LocalDate.of(2017, 12, 31));
-        menuService.create(getCreated()); // create menu with date 2017-12-31
-        assertTrue(getCache().get("2017-12-300", PageTo.class) != null);
-        assertTrue(getCache().get("2017-12-310", PageTo.class) == null);
     }
 
     private Cache getCache(){

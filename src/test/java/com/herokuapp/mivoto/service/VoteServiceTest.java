@@ -1,5 +1,6 @@
 package com.herokuapp.mivoto.service;
 
+import com.herokuapp.mivoto.repository.VotingTester;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -15,6 +16,9 @@ public class VoteServiceTest extends AbstractServiceTest{
     @Autowired
     private VoteService service;
 
+    @Autowired
+    private VotingTester votingTester;
+
     @Rule
     public ExpectedException thrown = ExpectedException.none();
 
@@ -23,21 +27,21 @@ public class VoteServiceTest extends AbstractServiceTest{
     @Test
     public void voteBeforeEleven(){
         service.vote(RESTAURANT1_ID + 1, ADMIN_ID, LocalTime.of(10,0), LocalDate.of(2017,12,30));
-        assertEquals(service.getCountOfVotesByRestaurantId(RESTAURANT1_ID + 1), COUNT + 1);
+        assertEquals(votingTester.getCountOfVotesByRestaurantId(RESTAURANT1_ID + 1), COUNT + 1);
     }
 
     @Test()
     public void voteAfterEleven(){
         service.vote(RESTAURANT1_ID + 1, ADMIN_ID, LocalTime.of(12,0), LocalDate.of(2017,12,30));
-        assertEquals(service.getCountOfVotesByRestaurantId(RESTAURANT1_ID + 1), COUNT + 1);
+        assertEquals(votingTester.getCountOfVotesByRestaurantId(RESTAURANT1_ID + 1), COUNT + 1);
     }
 
     @Test
     public void revoteBeforeEleven(){
         service.vote(RESTAURANT1_ID + 1, ADMIN_ID, LocalTime.of(10,0), LocalDate.of(2017,12,30));
         service.vote(RESTAURANT1_ID + 2, ADMIN_ID, LocalTime.of(10,0), LocalDate.of(2017,12,30));
-        assertEquals(service.getCountOfVotesByRestaurantId(RESTAURANT1_ID + 1), COUNT);
-        assertEquals(service.getCountOfVotesByRestaurantId(RESTAURANT1_ID + 2), 1);
+        assertEquals(votingTester.getCountOfVotesByRestaurantId(RESTAURANT1_ID + 1), COUNT);
+        assertEquals(votingTester.getCountOfVotesByRestaurantId(RESTAURANT1_ID + 2), 1);
     }
 
     @Test
@@ -50,6 +54,6 @@ public class VoteServiceTest extends AbstractServiceTest{
 
     @Test
     public void getCountOfVotesByRestaurantId(){
-        assertEquals(service.getCountOfVotesByRestaurantId(RESTAURANT1_ID + 1), COUNT);
+        assertEquals(votingTester.getCountOfVotesByRestaurantId(RESTAURANT1_ID + 1), COUNT);
     }
 }

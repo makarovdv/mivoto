@@ -21,14 +21,11 @@ public class MenuServiceImpl implements MenuService {
     @Autowired
     private MenuRepository repository;
 
-    @Autowired
-    private CacheEvictionService cacheEvictionService;
-
     @Override
     @Transactional
+    @CacheEvict(value = "restaurants_with_menu", allEntries = true)
     public MenuTo create(MenuTo menu) {
-        Menu saved = repository.save(fromTo(menu));
-        cacheEvictionService.evict(menu.getDate().toString());
+        Menu saved = repository.save(fromTo(menu), menu.getRestaurantId());
         return asTo(saved);
     }
 
@@ -36,8 +33,7 @@ public class MenuServiceImpl implements MenuService {
     @Transactional
     @CacheEvict(value = "restaurants_with_menu", allEntries = true)
     public void update(MenuTo menu) {
-        checkNotFoundWithId(repository.save(fromTo(menu)), menu.getId());
-        cacheEvictionService.clearKeys();
+        checkNotFoundWithId(repository.save(fromTo(menu), menu.getRestaurantId()), menu.getId());
     }
 
     @Override
@@ -45,7 +41,6 @@ public class MenuServiceImpl implements MenuService {
     @CacheEvict(value = "restaurants_with_menu", allEntries = true) // assume removal is rare
     public void delete(int id) {
         checkNotFoundWithId(repository.delete(id), id);
-        cacheEvictionService.clearKeys();
     }
 
     @Override
@@ -56,7 +51,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public MenuTo get(LocalDate date, Integer restaurantId) {
-        Menu menu = repository.get(date, restaurantId);
+        Menu menu = repository.getByRestaurantId(restaurantId, date);
         checkNotFound(menu!=null, String.format("restaurantId: %d, for date: %tF", restaurantId, date));
         return asTo(menu);
     }

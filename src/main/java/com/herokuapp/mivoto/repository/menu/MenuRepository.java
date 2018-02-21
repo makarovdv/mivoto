@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface MenuRepository {
 
-    Menu save(Menu menu);
+    Menu save(Menu menu, Integer restaurantId);
 
     boolean delete(int id);
 
@@ -16,7 +16,7 @@ public interface MenuRepository {
 
     Page<Menu> getPage(int page, LocalDate date);
 
-    List<Menu> getByRestaurantId(List<Integer> id, LocalDate date);
+    List<Menu> getByRestaurantIds(List<Integer> id, LocalDate date);
 
-    Menu get(LocalDate date, Integer restaurantId);
+    Menu getByRestaurantId(Integer restaurantId, LocalDate date);
 }

@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface CrudRestaurantRepository extends JpaRepository<Restaurant, Integer>{
 
-    @Modifying()
+    @Modifying
     @Query("UPDATE Restaurant r SET r.name=?1, r.address=?2, r.phone=?3 WHERE r.id=?4")
     int update(String name, String address, String phone, Integer id);
 
